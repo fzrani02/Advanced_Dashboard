@@ -272,7 +272,7 @@ def process_rty_7z(uploaded_file):
                     ##########
 
         if not all_data:
-            return None, None, None, None, None
+            return None, None, None, None, None, None, None
 
         final_df = pd.concat(all_data, ignore_index=True)
         top5_df = pd.DataFrame(all_top5_data)
@@ -335,12 +335,21 @@ def process_rty_7z(uploaded_file):
 
         output_buffer.seek(0)
 
-        return final_df, top5_df, monthly_df, weekly_detail_df, output_buffer
+        return (
+            final_df,
+            top5_df,
+            monthly_df,
+            weekly_qty_df,
+            weekly_top5_df,
+            weekly_detail_df,
+            output_buffer
+        )
     
 
     finally:
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
+
 
 
 
