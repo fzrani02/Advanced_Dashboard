@@ -1,0 +1,12 @@
+streamlit
+pandas
+openpyxl
+py7zr
+matplotlib
+numpy
+streamlit-aggrid
+xlsxwriter
+
+
+
+
