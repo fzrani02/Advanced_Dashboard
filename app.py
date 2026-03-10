@@ -129,8 +129,7 @@ if uploaded_file:
          df_qty_weekly, 
          df_fail_weekly, 
          df_weekly_detail, 
-         excel_buffer
-        ) = run_processing(uploaded_file)
+         excel_buffer) = run_processing(uploaded_file)
 
     if df_qty is not None:
 
@@ -933,6 +932,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
