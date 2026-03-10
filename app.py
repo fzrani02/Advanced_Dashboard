@@ -147,10 +147,10 @@ if uploaded_file:
             st.header("Weekly Integrated Data")
             
             st.markdown("#### Quantity and Yield per Week")
-            AgGrid(qty_df)
+            AgGrid(df_weekly)
             
             st.markdown("#### Top 5 Fail Mode per Week")
-            AgGrid(fail_df)
+            
             
             st.markdown("#### Weekly Detail")
             
@@ -925,6 +925,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
