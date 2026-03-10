@@ -183,7 +183,7 @@ if uploaded_file:
         
             available_months = [m for m in month_order if m in df_monthly["Month"].unique()]
 
-            week_order = [f"WW{str(i).zfill(2)}" for i in range (1,53)]
+             = [f"WW{str(i).zfill(2)}" for i in range (1,53)]
 
             # ===============
             # Filter Customer
@@ -777,7 +777,7 @@ if uploaded_file:
                 st.subheader("Quantity and Yield per Week")
 
                 week_order = [f"WW{str(i).zfill(2)}" for i in range(1,53)]
-                available_weeks = [w for w in week_order if w in df_qty_weekly["Week"].unique()]
+                available_weeks = [w for w in week_order if w in df_qty_weekly.columns]
 
                 customers_week = st.multiselect(
                     "Choose Customer",
@@ -926,6 +926,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
