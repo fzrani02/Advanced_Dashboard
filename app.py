@@ -777,11 +777,11 @@ if uploaded_file:
                 st.subheader("Quantity and Yield per Week")
 
                 week_order = [f"WW{str(i).zfill(2)}" for i in range(1,53)]
-                available_weeks = [w for w in week_order if w in df_weekly["Week"].unique()]
+                available_weeks = [w for w in week_order if w in df_qty_weekly["Week"].unique()]
 
                 customers_week = st.multiselect(
                     "Choose Customer",
-                    df_weekly["Customer"].unique(),
+                    df_qty_weekly["Customer"].unique(),
                     key="weekly_customer"
                 )
 
@@ -798,9 +798,9 @@ if uploaded_file:
                         ["TOTAL QTY", "TOTAL YIELD (%)"],
                         key="weekly_metric"
                     )
-                    df_filtered = df_weekly[
-                        (df_weekly["Customer"].isin(customers_week)) &
-                        (df_weekly["Week"] == week)
+                    df_filtered = df_qty_weekly[
+                        (df_qty_weekly["Customer"].isin(customers_week)) &
+                        (df_qty_weekly["Week"] == week)
                     ]
 
                     if not df_filtered.empty:
@@ -926,6 +926,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
