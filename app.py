@@ -123,15 +123,7 @@ st.sidebar.caption("Example: RTY > ABB > FCT > AB_010.xlsx")
 if uploaded_file:
 
     with st.spinner("Processing file..."):
-        (
-        df_qty, 
-        df_fail, 
-        df_monthly, 
-        df_qty_weekly, 
-        df_fail_weekly, 
-        df_weekly_detail, 
-        excel_buffer 
-        )= run_processing(uploaded_file)
+        df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, excel_buffer = run_processing(uploaded_file)
 
     if df_qty is not None:
 
@@ -934,6 +926,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
