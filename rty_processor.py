@@ -77,7 +77,6 @@ def process_rty_7z(uploaded_file):
 
                     df = pd.read_excel(xls, sheet_name=3, usecols ="A:N", skiprows=1, nrows=5)
                     
-                    df_week = pd.read_excel(xls, sheet_name=2, usecols="A:BA", skiprows=7, nrows=5)
                     
                     df.columns = df.columns.str.strip()
 
@@ -93,10 +92,31 @@ def process_rty_7z(uploaded_file):
 
                     df[month_cols] = df[month_cols].astype(float)
 
-                    df_week.rename(columns={"Unnamed:0":"QTY"}, inplace=True)
-                    week_cols = df_week.columns[1:]
+                    df_week = pd.read_excel(
+                        xls,
+                        sheet_name=2,
+                        usecols="A:BA",
+                        skiprows=1,   # karena row pertama kosong
+                        nrows=4       # QTY IN, PASS, FAIL, YIELD
+                    )
+                    
+                    df_week[week_cols] = pd.to_numeric(df_week[week_cols], errors="coerce").fillna(0)
 
-                    df_week[week_cols] = df_week[week_cols].astype(float)
+                    df_week.columns = df_week.columns.str.strip()
+
+                    df_week.rename(columns={
+                        "Unnamed: 0" : "QTYWeek",
+                        "Unnamed: 0" : "QTYWeek"
+                    }, inplace=True)
+
+                    if "QTYWeek" not in df_week.columns:
+                        df_week.insert(0, "QTYWeek", ["QTY IN","QTY PASS","QTY FAIL","YIELD"])
+                    
+                    week_cols = df_week.columns[1:]
+                    
+                    df_week[week_cols] = pd.to_numeric(df_week[week_cols], errors="coerce").fillna(0)
+
+                
             
                     ############# MONTHLY ###########
 
@@ -349,6 +369,7 @@ def process_rty_7z(uploaded_file):
     finally:
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
+
 
 
 
