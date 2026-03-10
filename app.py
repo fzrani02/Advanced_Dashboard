@@ -183,7 +183,7 @@ if uploaded_file:
         
             available_months = [m for m in month_order if m in df_monthly["Month"].unique()]
 
-             = [f"WW{str(i).zfill(2)}" for i in range (1,53)]
+           
 
             # ===============
             # Filter Customer
@@ -926,6 +926,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
