@@ -113,10 +113,8 @@ def process_rty_7z(uploaded_file):
                     
                     week_cols = df_week.columns[1:]
                     
-                    df_week[week_cols] = pd.to_numeric(df_week[week_cols], errors="coerce").fillna(0)
+                    df_week[week_cols] = df_week[week_cols].apply(pd.to_numeric, errors="coerce").fillna(0)
 
-                
-            
                     ############# MONTHLY ###########
 
                     result = (
@@ -368,6 +366,7 @@ def process_rty_7z(uploaded_file):
     finally:
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
+
 
 
 
