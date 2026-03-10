@@ -100,7 +100,6 @@ def process_rty_7z(uploaded_file):
                         nrows=4       # QTY IN, PASS, FAIL, YIELD
                     )
                     
-                    df_week[week_cols] = pd.to_numeric(df_week[week_cols], errors="coerce").fillna(0)
 
                     df_week.columns = df_week.columns.str.strip()
 
@@ -369,6 +368,7 @@ def process_rty_7z(uploaded_file):
     finally:
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
+
 
 
 
