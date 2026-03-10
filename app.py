@@ -123,7 +123,15 @@ st.sidebar.caption("Example: RTY > ABB > FCT > AB_010.xlsx")
 if uploaded_file:
 
     with st.spinner("Processing file..."):
-        df_qty, df_fail, df_monthly, df_weekly, excel_buffer = run_processing(uploaded_file)
+        (
+            df_qty, 
+            df_fail, 
+            df_monthly, 
+            df_qty_weekly, 
+            df_fail_weekly, 
+            df_weekly_detail, 
+            excel_buffer
+        ) = run_processing(uploaded_file)
 
     if df_qty is not None:
 
@@ -147,12 +155,13 @@ if uploaded_file:
             st.header("Weekly Integrated Data")
             
             st.markdown("#### Quantity and Yield per Week")
-            AgGrid(df_weekly)
+            AgGrid(df_qty_weekly)
             
             st.markdown("#### Top 5 Fail Mode per Week")
-            
+            AgGrid(df_fail_weekly)
             
             st.markdown("#### Weekly Detail")
+            AgGrid(df_weekly_detail)
             
             st.markdown("----")
 
@@ -925,6 +934,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
