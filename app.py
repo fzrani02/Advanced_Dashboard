@@ -884,50 +884,47 @@ if uploaded_file:
                             left=pass_values,
                             label="FAIL"
                         )
-                            
-                        
-                                
-                            ax.set_xlabel("Quantity")
-                            ax.set_title(f"Total Quantity per Project ({week_start} - {week_end})")
+                               
+                        ax.set_xlabel("Quantity")
+                        ax.set_title(f"Total Quantity per Project ({week_start} - {week_end})")
             
-                            ax.set_xlim(0, total_values.max()*1.2)
+                        ax.set_xlim(0, total_values.max()*1.2)
                        
                             
             
-                            if metric == "TOTAL QTY":
+                        if metric == "TOTAL QTY":
 
-                                pass_values = df_plot["PASS"]
-                                fail_values = df_plot["FAIL"]
-                                total_values = df_plot["IN"]
+                            pass_values = df_plot["PASS"]
+                            fail_values = df_plot["FAIL"]
+                            total_values = df_plot["IN"]
 
-                                colors = plt.cm.tab20c(range(len(df_plot)))
+                            colors = plt.cm.tab20c(range(len(df_plot)))
 
-                                ax.barh(
-                                    df_plot["Project"],
-                                    fail_values,
-                                    color="black",
-                                    label="FAIL"
-                                )
+                            ax.barh(
+                                df_plot["Project"],
+                                fail_values,
+                                color="black",
+                                label="FAIL"
+                            )
                                 
-                                ax.barh(
-                                    df_plot["Project"],
-                                    pass_values,
-                                    left=fail_values,
-                                    color=colors,
-                                    label="PASS"
-                                )
+                            ax.barh(
+                                df_plot["Project"],
+                                pass_values,
+                                left=fail_values,
+                                color=colors,
+                                label="PASS"
+                            )
 
-                                for i in range(len(df_plot)):
+                            for i in range(len(df_plot)):
 
-                                    if fail_values[i] > 0:
-                                        ax.text(fail_values[i], i, int(fail_values[i]), va='left')
+                                if fail_values[i] > 0:
+                                    ax.text(fail_values[i], i, int(fail_values[i]), va='left')
 
-                                    if pass_values[i] > 0:
-                                        ax.text(fail_values[i]+pass_values[i], i, int(pass_values[i]), va='left')
+                                if pass_values[i] > 0:
+                                    ax.text(fail_values[i]+pass_values[i], i, int(pass_values[i]), va='left')
 
-                                    if total_values[i] > 0:
-                                        ax.text(total_values[i]+1, i, int(total_values[i]),
-                                                color='red', fontweight='bold')
+                                if total_values[i] > 0:
+                                    ax.text(total_values[i]+1, i, int(total_values[i]), color='red', fontweight='bold')
                             else: 
                                 colors = plt.cm.tab20c(range(len(df_plot)))
                                 
@@ -971,6 +968,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
