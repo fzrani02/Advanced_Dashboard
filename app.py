@@ -250,7 +250,7 @@ if uploaded_file:
                         ax.barh(
                             df_filtered["Station_Label"],
                             pass_values,
-                            left=fail_values,
+                            =fail_values,
                             color=pass_colors,
                             label="PASS"
                         )
@@ -281,7 +281,7 @@ if uploaded_file:
                                     fail_val + extra,
                                     i,
                                     int(fail_val),
-                                    ha='left',
+                                    ha='',
                                     va='center',
                                     fontsize=fail_size,
                                     fontweight='bold',
@@ -294,7 +294,7 @@ if uploaded_file:
                                     (fail_val + pass_val) + base_offset,
                                     i,
                                     int(pass_val),
-                                    ha='left',
+                                    ha='',
                                     va='center',
                                     fontsize=pass_size,
                                     fontweight='bold',
@@ -309,7 +309,7 @@ if uploaded_file:
                                     total_val + dynamic_offset,
                                     i,
                                     int(total_val),
-                                    ha='left',
+                                    ha='',
                                     va='center',
                                     fontsize=total_size,
                                     fontweight='bold',
@@ -325,7 +325,7 @@ if uploaded_file:
                             Patch(facecolor="black", label="FAIL")
                         )
 
-                        ax.legend(handles=legend_elements, title="Index", bbox_to_anchor=(1.02, 1), loc="upper left")
+                        ax.legend(handles=legend_elements, title="Index", bbox_to_anchor=(1.02, 1), loc="upper ")
   
                         ax.set_xlabel("Quantity")
                         ax.set_title(f"Total Quantity (QTY Fail + QTY Pass) per Station - {month}")
@@ -353,7 +353,7 @@ if uploaded_file:
                                 value + 1,
                                 i,
                                 round(value, 2),
-                                ha='left',
+                                ha='',
                                 va='center',
                                 fontsize=8
                             )
@@ -363,7 +363,7 @@ if uploaded_file:
                             for cust in unique_customers
                         ]
 
-                        ax.legend(handles=legend_elements, title="Customer", bbox_to_anchor=(1.02, 1), loc="upper left")
+                        ax.legend(handles=legend_elements, title="Customer", bbox_to_anchor=(1.02, 1), loc="upper ")
                         ax.set_xlabel("Total Yield (%)")
                         ax.set_title(f"Total Yield (%) per Station - {month}")
                         ax.set_xlim(0, 115)
@@ -483,7 +483,7 @@ if uploaded_file:
                                 value + offset, 
                                 i,
                                 int(value),
-                                ha="left",
+                                ha="",
                                 va="center",
                                 fontsize=12,
                                 fontweight = "bold",
@@ -495,7 +495,7 @@ if uploaded_file:
                             for station in unique_stations
                         ]
 
-                        ax2.legend(handles=legend_elements_station, title="Station", bbox_to_anchor=(1.02, 1), loc="upper left")
+                        ax2.legend(handles=legend_elements_station, title="Station", bbox_to_anchor=(1.02, 1), loc="upper ")
 
                         ax2.set_xlabel("Fail Count", fontsize = 12)
                         ax2.set_ylabel("Station | Fail Mode")
@@ -634,7 +634,7 @@ if uploaded_file:
                                 value + 1, 
                                 i,
                                 round(value, 2),
-                                ha='left',
+                                ha='',
                                 va='center',
                                 fontsize=8
                             )
@@ -881,7 +881,7 @@ if uploaded_file:
                         ax.barh(
                             df_plot["Project"],
                             fail_values,
-                            left=pass_values,
+                            =pass_values,
                             label="FAIL"
                         )
                                
@@ -910,7 +910,7 @@ if uploaded_file:
                             ax.barh(
                                 df_plot["Project"],
                                 pass_values,
-                                left=fail_values,
+                                left=fail_values,,
                                 color=colors,
                                 label="PASS"
                             )
@@ -918,24 +918,24 @@ if uploaded_file:
                             for i in range(len(df_plot)):
 
                                 if fail_values[i] > 0:
-                                    ax.text(fail_values[i], i, int(fail_values[i]), va='left')
+                                    ax.text(fail_values[i], i, int(fail_values[i]), va='center')
 
                                 if pass_values[i] > 0:
-                                    ax.text(fail_values[i]+pass_values[i], i, int(pass_values[i]), va='left')
+                                    ax.text(fail_values[i]+pass_values[i], i, int(pass_values[i]), va='center')
 
                                 if total_values[i] > 0:
                                     ax.text(total_values[i]+1, i, int(total_values[i]), color='red', fontweight='bold')
-                            else: 
-                                colors = plt.cm.tab20c(range(len(df_plot)))
+                        else: 
+                            colors = plt.cm.tab20c(range(len(df_plot)))
                                 
-                                df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
+                            df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
 
 
-                                ax.barh(
-                                    df_plot["Project"],
-                                    df_plot["YIELD"],
-                                    color=colors
-                                )
+                            ax.barh(
+                                df_plot["Project"],
+                                df_plot["YIELD"],
+                                color=colors
+                            )
 
 
                             for i, value in enumerate(df_plot["YIELD"]):
@@ -950,9 +950,7 @@ if uploaded_file:
                             ax.set_xlabel("Yield (%)")
                             ax.set_xlim(0,115)
                             ax.set_title(f"Total Yield per Project - ({week_start} - {week_end})")
-            
-                            ax.set_xlim(0,115)
-                            
+                                        
                         ax.set_ylabel("Project")
                         plt.tight_layout()
                         st.pyplot(fig)
@@ -963,11 +961,11 @@ if uploaded_file:
                     st.info("Please select at least one customer")
                     
                         
-                            
 
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
