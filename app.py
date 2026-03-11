@@ -863,50 +863,49 @@ if uploaded_file:
 
                 df_plot = pd.DataFrame(project_data)
 
-                    if not df_plot.empty:
+                if not df_plot.empty:
+           
+                    fig, ax= plt.subplots(figsize=(14,6))
 
-                        fig, ax= plt.subplots(figsize=(14,6))
+                    if metric == "TOTAL QTY":
+                        pass_values = df_plot["PASS"]
+                        fail_values = df_plot["FAIL"]
+                        total_values = df_plot["IN"]
 
-                        if metric == "TOTAL QTY":
-                            pass_values = df_plot["PASS"]
-                            fail_values = df_plot["FAIL"]
-                            total_values = df_plot["IN"]
+                        unique_customers = df_plot["Customer"].unique()
+                        colors = plt.cm.tab20(range(len(unique_customers)))
 
-                            unique_customers = df_plot["Customer"].unique()
-                            colors = plt.cm.tab20(range(len(unique_customers)))
-
-                            color_map_station = {
-                                cust: colors[i] for i, cust in enumerate(unique_customers)
-                            }
-
-                            pass_colors = df_plot["Customer"].map(color_map_station)
-
+                        color_map_station = {
                             
+                            cust: colors[i] for i, cust in enumerate(unique_customers)
+                        }
 
-                            ax.barh(
-                                df_plot["Project"],
-                                fail_values,
-                                color="black",
-                                label="FAIL"
-                            )
+                        pass_colors = df_plot["Customer"].map(color_map_station)
 
-                            ax.barh(
-                                df_plot["Station_Label"],
-                                pass_values,
-                                left=fail_values,
-                                color=pass_colors,
-                                label="PASS"
-                            )
+                        ax.barh(
+                            df_plot["Project"],
+                            fail_values,
+                            color="black",
+                            label="FAIL"
+                        )
+
+                        ax.barh(
+                            df_plot["Station_Label"],
+                            pass_values,
+                            left=fail_values,
+                            color=pass_colors,
+                            label="PASS"
+                        )
                             
-                            for i, value in enumerate(total_values):
-                                ax.text(
-                                    value+1,
-                                    i, 
-                                    int(value),
-                                    va='center',
-                                    fontsize=8, 
-                                    color='red'
-                                )
+                        for i, value in enumerate(total_values):
+                            ax.text(
+                                value+1,
+                                i, 
+                                int(value),
+                                va='center',
+                                fontsize=8, 
+                                color='red'
+                            )
                             legend_elements =[
                                 Patch(facecolor=color_map_station[cust], label=cust)
                                 for cust in unique_customers
@@ -1016,6 +1015,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
