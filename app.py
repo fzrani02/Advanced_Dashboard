@@ -882,7 +882,6 @@ if uploaded_file:
                             df_plot["Project"],
                             fail_values,
                             left=pass_values,
-                            color=pass_colors,
                             label="FAIL"
                         )
                             
@@ -1004,6 +1003,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
