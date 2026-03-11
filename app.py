@@ -214,12 +214,13 @@ if uploaded_file:
                     (df_monthly["Month"] == month)
                 ]
                
-                if not df_filtered.empty:
+                if not df_plot.empty:
 
                     fig, ax = plt.subplots(figsize=(14, 6))
-                    df_filtered = df_filtered.copy()
-                    df_filtered["Station_Label"] = (
-                        df_filtered["Customer"] + " | " + df_filtered["Station"]
+                    
+                    df_plot = df_plot.copy()
+                    df_plot["Station_Label"] = (
+                        df_plot["Customer"] + " | " + df_plot["Station"]
                     )
 
                     if metric == "TOTAL QTY":
@@ -1023,6 +1024,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
