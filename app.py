@@ -874,17 +874,16 @@ if uploaded_file:
 
                         ax.barh(
                             df_plot["Project"],
-                            fail_values,
-                            color="black",
-                            label="FAIL"
+                            pass_values,
+                            label="PASS"
                         )
 
                         ax.barh(
-                            df_plot["Station_Label"],
-                            pass_values,
-                            left=fail_values,
+                            df_plot["Project"],
+                            fail_values,
+                            left=pass_values,
                             color=pass_colors,
-                            label="PASS"
+                            label="FAIL"
                         )
                             
                         for i, value in enumerate(total_values):
@@ -1005,6 +1004,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
