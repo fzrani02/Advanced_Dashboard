@@ -977,16 +977,16 @@ if uploaded_file:
                                     if total_values[i] > 0:
                                         ax.text(total_values[i]+1, i, int(total_values[i]),
                                                 color='red', fontweight='bold')
-                        else: 
-                            colors = plt.cm.tab20c(range(len(df_plot)))
+                            else: 
+                                colors = plt.cm.tab20c(range(len(df_plot)))
 
-                            ax.barh(
-                                df_plot["Project"],
-                                df_plot["Yield"],
-                                color=colors
-                            )
+                                ax.barh(
+                                    df_plot["Project"],
+                                    df_plot["Yield"],
+                                    color=colors
+                                )
 
-                            df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
+                                df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
 
                             for i, value in enumerate(df_plot["YIELD"]):
                                 ax.text(
@@ -1027,6 +1027,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
