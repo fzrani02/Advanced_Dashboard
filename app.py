@@ -885,31 +885,8 @@ if uploaded_file:
                             label="FAIL"
                         )
                             
-                        for i, value in enumerate(total_values):
-                            ax.text(
-                                value+1,
-                                i, 
-                                int(value),
-                                va='center',
-                                fontsize=8, 
-                                color='red'
-                            )
-                            legend_elements =[
-                                Patch(facecolor=color_map_station[cust], label=cust)
-                                for cust in unique_customers
-                            ]
-
-                            legend_elements.append(
-                                Patch(facecolor="black", label="FAIL")
-                            )
-
-                            ax.legend(
-                                handles=legend_elements,
-                                title="Index",
-                                bbox_to_anchor=(1.02, 1),
-                                loc="upper left"
-                            )
-                            
+                        
+                                
                             ax.set_xlabel("Quantity")
                             ax.set_title(f"Total Quantity per Project ({week_start} - {week_end})")
             
@@ -975,20 +952,11 @@ if uploaded_file:
 
                             ax.set_xlabel("Yield (%)")
                             ax.set_xlim(0,115)
-                        
-                            ax.legend(
-                                handles=legend_elements,
-                                title="Customer",
-                                bbox_to_anchor=(1.02,1),
-                                loc="upper left"
-                            )
-            
-                            ax.set_xlabel("Total Yield (%)")
-                            ax.set_title(f"Total Yield per Station - {week}")
+                            ax.set_title(f"Total Yield per Project - ({week_start} - {week_end})")
             
                             ax.set_xlim(0,115)
                             
-                        ax.set_ylabel("Station")
+                        ax.set_ylabel("Project")
                         plt.tight_layout()
                         st.pyplot(fig)
                         
@@ -1003,6 +971,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
