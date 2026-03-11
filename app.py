@@ -861,21 +861,16 @@ if uploaded_file:
                         "YIELD": yield_val
                     })
 
-                    df_plot = pd.DataFrame(project_data)
+                df_plot = pd.DataFrame(project_data)
 
                     if not df_plot.empty:
 
                         fig, ax= plt.subplots(figsize=(14,6))
 
-                        df_plot = df_plot.copy()
-                        df_plot["Station_Label"] = (
-                            df_plot["Customer"] + " | " + df_plot["Station"]
-                        )
-
                         if metric == "TOTAL QTY":
-                            pass_values = df_plot["TOTAL QTY PASS"]
-                            fail_values = df_plot["TOTAL QTY FAIL"]
-                            total_values = pass_values + fail_values
+                            pass_values = df_plot["PASS"]
+                            fail_values = df_plot["FAIL"]
+                            total_values = df_plot["IN"]
 
                             unique_customers = df_plot["Customer"].unique()
                             colors = plt.cm.tab20(range(len(unique_customers)))
@@ -889,7 +884,7 @@ if uploaded_file:
                             
 
                             ax.barh(
-                                df_plot["Station_Label"],
+                                df_plot["Project"],
                                 fail_values,
                                 color="black",
                                 label="FAIL"
@@ -929,18 +924,11 @@ if uploaded_file:
                             )
                             
                             ax.set_xlabel("Quantity")
-                            ax.set_title(f"Total Quantity per Station - {week}")
+                            ax.set_title(f"Total Quantity per Project ({week_start} - {week_end})")
             
                             ax.set_xlim(0, total_values.max()*1.2)
-                        else:
-                            unique_customers = df_plot["Customer"].unique()
-                            colors = plt.cm.tab20(range(len(unique_customers)))
-            
-                            color_map_station = {
-                                cust: colors[i] for i, cust in enumerate(unique_customers)
-                            }
-            
-                            bar_colors = df_plot["Customer"].map(color_map_station)
+                       
+                            
             
                             if metric == "TOTAL QTY":
 
@@ -1028,6 +1016,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
