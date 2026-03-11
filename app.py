@@ -858,7 +858,7 @@ if uploaded_file:
 
                     df_plot = pd.DataFrame(project_data)
 
-                    if not df_filtered.empty:
+                    if not df_plot.empty:
 
                         fig, ax= plt.subplots(figsize=(14,6))
 
@@ -1021,6 +1021,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
