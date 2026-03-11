@@ -874,15 +874,16 @@ if uploaded_file:
 
                         ax.barh(
                             df_plot["Project"],
-                            pass_values,
-                            label="PASS"
+                            fail_values,
+                            color="black",
+                            label="FAIL"
                         )
 
                         ax.barh(
                             df_plot["Project"],
-                            fail_values,
-                            =pass_values,
-                            label="FAIL"
+                            pass_values,
+                            left=fail_values,
+                            label="PASS"
                         )
                                
                         ax.set_xlabel("Quantity")
@@ -965,6 +966,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
