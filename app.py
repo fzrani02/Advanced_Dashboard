@@ -872,16 +872,6 @@ if uploaded_file:
                         fail_values = df_plot["FAIL"]
                         total_values = df_plot["IN"]
 
-                        unique_customers = df_plot["Customer"].unique()
-                        colors = plt.cm.tab20(range(len(unique_customers)))
-
-                        color_map_station = {
-                            
-                            cust: colors[i] for i, cust in enumerate(unique_customers)
-                        }
-
-                        pass_colors = df_plot["Customer"].map(color_map_station)
-
                         ax.barh(
                             df_plot["Project"],
                             fail_values,
@@ -1015,6 +1005,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
