@@ -824,12 +824,6 @@ if uploaded_file:
                 end_idx = week_order.index(week_end)
 
                 selected_weeks = week_order[start_idx:end_idx+1]
-
-                metric = st.selectbox(
-                    "Choose Metric",
-                    ["TOTAL QTY", "TOTAL YIELD (%)"],
-                    key="weekly_metric"
-                )
                 
                 df_station = df_qty_weekly[
                     (df_qty_weekly["Customer"] == customer_week) &
@@ -1027,6 +1021,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
