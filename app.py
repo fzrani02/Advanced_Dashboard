@@ -973,14 +973,16 @@ if uploaded_file:
                                                 color='red', fontweight='bold')
                             else: 
                                 colors = plt.cm.tab20c(range(len(df_plot)))
+                                
+                                df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
+
 
                                 ax.barh(
                                     df_plot["Project"],
-                                    df_plot["Yield"],
+                                    df_plot["YIELD"],
                                     color=colors
                                 )
 
-                                df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
 
                             for i, value in enumerate(df_plot["YIELD"]):
                                 ax.text(
@@ -1021,6 +1023,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
