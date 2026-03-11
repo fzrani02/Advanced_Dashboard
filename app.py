@@ -250,7 +250,7 @@ if uploaded_file:
                         ax.barh(
                             df_filtered["Station_Label"],
                             pass_values,
-                            =fail_values,
+                            fail_values,
                             color=pass_colors,
                             label="PASS"
                         )
@@ -965,6 +965,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
