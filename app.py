@@ -836,33 +836,33 @@ if uploaded_file:
                     (df_qty_weekly["Station"] == station_week)
                 ].copy()
 
-                    # ========================
-                    # HITUNG TOTAL PER PROJECT
-                    # ========================
+                # ========================
+                # HITUNG TOTAL PER PROJECT
+                # ========================
 
-                    projects = df_station["Project"].unique()
+                projects = df_station["Project"].unique()
 
-                    project_data = []
+                project_data = []
 
-                    for proj in projects:
+                for proj in projects:
 
-                        df_proj = df_station[df_station["Project"] == proj]
+                    df_proj = df_station[df_station["Project"] == proj]
 
-                        qty_in = df_proj[df_proj["QTYWeek"] == "QTY IN"][selected_weeks].sum(axis=1).sum()
-                        qty_pass = df_proj[df_proj["QTYWeek"] == "QTY PASS"][selected_weeks].sum(axis=1).sum()
-                        qty_fail = df_proj[df_proj["QTYWeek"] == "QTY FAIL"][selected_weeks].sum(axis=1).sum()
+                    qty_in = df_proj[df_proj["QTYWeek"] == "QTY IN"][selected_weeks].sum(axis=1).sum()
+                    qty_pass = df_proj[df_proj["QTYWeek"] == "QTY PASS"][selected_weeks].sum(axis=1).sum()
+                    qty_fail = df_proj[df_proj["QTYWeek"] == "QTY FAIL"][selected_weeks].sum(axis=1).sum()
 
-                        yield_val = (qty_pass / qty_in * 100) if qty_in > 0 else 0
+                    yield_val = (qty_pass / qty_in * 100) if qty_in > 0 else 0
 
-                        project_data.append({
-                            "Project": proj.replace(".xlsx",""),
-                            "PASS": qty_pass,
-                            "FAIL": qty_fail,
-                            "IN": qty_in,
-                            "YIELD": yield_val
-                        })
+                    project_data.append({
+                        "Project": proj.replace(".xlsx",""),
+                        "PASS": qty_pass,
+                        "FAIL": qty_fail,
+                        "IN": qty_in,
+                        "YIELD": yield_val
+                    })
 
-                        df_plot = pd.DataFrame(project_data)
+                    df_plot = pd.DataFrame(project_data)
 
                     if not df_filtered.empty:
 
@@ -1027,6 +1027,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
