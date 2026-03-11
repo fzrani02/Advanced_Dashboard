@@ -825,16 +825,16 @@ if uploaded_file:
 
                 selected_weeks = week_order[start_idx:end_idx+1]
 
-                    metric = st.selectbox(
-                        "Choose Metric",
-                        ["TOTAL QTY", "TOTAL YIELD (%)"],
-                        key="weekly_metric"
-                    )
+                metric = st.selectbox(
+                    "Choose Metric",
+                    ["TOTAL QTY", "TOTAL YIELD (%)"],
+                    key="weekly_metric"
+                )
                 
-                    df_station = df_qty_weekly[
-                        (df_qty_weekly["Customer"] == customer_week) &
-                        (df_qty_weekly["Station"] == station_week)
-                    ].copy()
+                df_station = df_qty_weekly[
+                    (df_qty_weekly["Customer"] == customer_week) &
+                    (df_qty_weekly["Station"] == station_week)
+                ].copy()
 
                     # ========================
                     # HITUNG TOTAL PER PROJECT
@@ -1027,6 +1027,7 @@ if uploaded_file:
             with tab4:
                 st.subheader("Daily")
             
+
 
 
 
