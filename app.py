@@ -281,7 +281,7 @@ if uploaded_file:
                                     fail_val + extra,
                                     i,
                                     int(fail_val),
-                                    ha='',
+                                    ha='left',
                                     va='center',
                                     fontsize=fail_size,
                                     fontweight='bold',
@@ -294,7 +294,7 @@ if uploaded_file:
                                     (fail_val + pass_val) + base_offset,
                                     i,
                                     int(pass_val),
-                                    ha='',
+                                    ha='left',
                                     va='center',
                                     fontsize=pass_size,
                                     fontweight='bold',
@@ -309,7 +309,7 @@ if uploaded_file:
                                     total_val + dynamic_offset,
                                     i,
                                     int(total_val),
-                                    ha='',
+                                    ha='left',
                                     va='center',
                                     fontsize=total_size,
                                     fontweight='bold',
@@ -325,7 +325,7 @@ if uploaded_file:
                             Patch(facecolor="black", label="FAIL")
                         )
 
-                        ax.legend(handles=legend_elements, title="Index", bbox_to_anchor=(1.02, 1), loc="upper ")
+                        ax.legend(handles=legend_elements, title="Index", bbox_to_anchor=(1.02, 1), loc="upper left")
   
                         ax.set_xlabel("Quantity")
                         ax.set_title(f"Total Quantity (QTY Fail + QTY Pass) per Station - {month}")
@@ -353,7 +353,7 @@ if uploaded_file:
                                 value + 1,
                                 i,
                                 round(value, 2),
-                                ha='',
+                                ha='left',
                                 va='center',
                                 fontsize=8
                             )
@@ -363,7 +363,7 @@ if uploaded_file:
                             for cust in unique_customers
                         ]
 
-                        ax.legend(handles=legend_elements, title="Customer", bbox_to_anchor=(1.02, 1), loc="upper ")
+                        ax.legend(handles=legend_elements, title="Customer", bbox_to_anchor=(1.02, 1), loc="upper left")
                         ax.set_xlabel("Total Yield (%)")
                         ax.set_title(f"Total Yield (%) per Station - {month}")
                         ax.set_xlim(0, 115)
@@ -495,7 +495,7 @@ if uploaded_file:
                             for station in unique_stations
                         ]
 
-                        ax2.legend(handles=legend_elements_station, title="Station", bbox_to_anchor=(1.02, 1), loc="upper ")
+                        ax2.legend(handles=legend_elements_station, title="Station", bbox_to_anchor=(1.02, 1), loc="upper left")
 
                         ax2.set_xlabel("Fail Count", fontsize = 12)
                         ax2.set_ylabel("Station | Fail Mode")
@@ -634,7 +634,7 @@ if uploaded_file:
                                 value + 1, 
                                 i,
                                 round(value, 2),
-                                ha='',
+                                ha='left',
                                 va='center',
                                 fontsize=8
                             )
