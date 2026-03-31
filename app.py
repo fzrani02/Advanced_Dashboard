@@ -218,12 +218,24 @@ if uploaded_file:
                
                 if not df_filtered.empty:
 
-                    fig, ax = plt.subplots(figsize=(14, 6))
+                    n_bars = len(df_filtered)
+                    fig_height =  max(6, n_bars * 0.6)
+
+                    #fig, ax = plt.subplots(figsize=(14, fig_height))
                     
                     df_filtered = df_filtered.copy()
-                    df_filtered["Station_Label"] = (
-                        df_filtered["Customer"] + " | " + df_filtered["Station"]
+
+                    df_filtered["TOTAL"] = (
+                        df_filtered["TOTAL QTY PASS"] +
+                        df_filtered["TOTAL QTY FAIL"]
                     )
+
+                    df_filtered = df_filtered.sort_values("TOTAL", ascending= True)
+                    df_filtered = df_filtered.tail(10)
+                    
+                    #df_filtered["Station_Label"] = (
+                       # df_filtered["Customer"] + " | " + df_filtered["Station"]
+                    #)
 
                     if metric == "TOTAL QTY":
 
@@ -232,9 +244,10 @@ if uploaded_file:
                         total_values = pass_values + fail_values
 
                         unique_customers = df_filtered["Customer"].unique()
-                        colors = plt.cm.tab20(range(len(unique_customers)))
+                        cmap = plt.cm.get_cmap(len(unique_customers)))
+                        
                         color_map_station = {
-                            cust: colors[i]
+                            cust: cmap(i)
                             for i, cust in enumerate(unique_customers)
                         }
 
@@ -250,7 +263,7 @@ if uploaded_file:
                         ax.barh(
                             df_filtered["Station_Label"],
                             pass_values,
-                            fail_values,
+                            left=fail_values,
                             color=pass_colors,
                             label="PASS"
                         )
@@ -263,11 +276,11 @@ if uploaded_file:
                         fail_size = base_size - 1
                         pass_size = base_size
                         total_size = base_size + 2
-                        extra = total_values.max() * 0.002
+                        #extra = total_values.max() * 0.002
 
                         # ADD SPACE PER LABEL 
-                        base_offset = total_values.max() * 0.005
-                        char_width = total_values.max() * 0.012
+                        #base_offset = total_values.max() * 0.005
+                        #char_width = total_values.max() * 0.012
 
                         for i in range(n_bars):
 
@@ -276,22 +289,12 @@ if uploaded_file:
                             total_val = total_values.iloc[i]
 
                             # FAIL label (hitam, diatas FAIL bar)
-                            if fail_val > 0:
-                                ax.text(
-                                    fail_val + extra,
-                                    i,
-                                    int(fail_val),
-                                    ha='left',
-                                    va='center',
-                                    fontsize=fail_size,
-                                    fontweight='bold',
-                                    color='black'
-                                )
+                            
 
                             # PASS label (warna customer, di atas bar PASS)
                             if pass_val > 0:
                                 ax.text(
-                                    (fail_val + pass_val) + base_offset,
+                                    fail_val + pass_valb+ 2,
                                     i,
                                     int(pass_val),
                                     ha='left',
@@ -303,10 +306,10 @@ if uploaded_file:
 
                             # TOTAL label (di atas stack)
                             if total_val > 0:
-                                digit = len(str(int(pass_val))) if pass_val > 0 else 0 
-                                dynamic_offset = base_offset + (digit * char_width) + (total_values.max() * 0.005)
+                                #digit = len(str(int(pass_val))) if pass_val > 0 else 0 
+                                #dynamic_offset = base_offset + (digit * char_width) + (total_values.max() * 0.005)
                                 ax.text(
-                                    total_val + dynamic_offset,
+                                    total_val + 8,
                                     i,
                                     int(total_val),
                                     ha='left',
