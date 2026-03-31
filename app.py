@@ -296,7 +296,7 @@ if uploaded_file:
                             # PASS label (warna customer, di atas bar PASS)
                             if pass_val > 0:
                                 ax.text(
-                                    fail_val + pass_valb+ 2,
+                                    fail_val + pass_val + 2,
                                     i,
                                     int(pass_val),
                                     ha='left',
