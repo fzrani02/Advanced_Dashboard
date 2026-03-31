@@ -5,6 +5,15 @@ import uuid
 import tempfile
 from io import BytesIO
 import py7zr
+import stat
+import time
+
+def on_rm_error(func, path, exc_info):
+    try:
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
+    except Exception:
+        pass
 
 
 def process_rty_7z(uploaded_file):
@@ -362,13 +371,14 @@ def process_rty_7z(uploaded_file):
             output_buffer
         )
     
-
     finally:
         if os.path.exists(temp_dir):
-            shutil.rmtree(temp_dir)
-
-
-
+            try:
+                time.sleep(0.5)
+                shutil.rmtree(temp_dir, onerror=on_rm_error)
+            except Exception:
+                pass
+ 
 
 
 
