@@ -82,144 +82,145 @@ def process_rty_7z(uploaded_file):
                     # ==============================
                     # QTY
                     # ==============================
-                    xls = pd.ExcelFile(full_path, engine="openpyxl")
 
-                    df = pd.read_excel(xls, sheet_name=3, usecols ="A:N", skiprows=1, nrows=5)
-                    
-                    
-                    df.columns = df.columns.str.strip()
-
-                    df.rename(columns={
-                        "Unnamed: 0": "QTY",
-                        "Unnamed:0": "QTY"
-                    }, inplace=True)
-
-                    if "QTY" not in df.columns:
-                        df.insert(0, "QTY", ["QTY IN","QTY PASS","QTY FAIL","YIELD","OTHER"][:len(df)])
-                    
-                    month_cols= df.columns[1:]
-
-                    df[month_cols] = df[month_cols].astype(float)
-
-                    df_week = pd.read_excel(
-                        xls,
-                        sheet_name=2,
-                        usecols="A:BA",
-                        skiprows=1,   # karena row pertama kosong
-                        nrows=4       # QTY IN, PASS, FAIL, YIELD
-                    )
-                    
-
-                    df_week.columns = df_week.columns.str.strip()
-
-                    df_week.rename(columns={
-                        "Unnamed: 0" : "QTYWeek",
-                        "Unnamed: 0" : "QTYWeek"
-                    }, inplace=True)
-
-                    if "QTYWeek" not in df_week.columns:
-                        df_week.insert(0, "QTYWeek", ["QTY IN","QTY PASS","QTY FAIL","YIELD"])
-                    
-                    week_cols = df_week.columns[1:]
-                    
-                    df_week[week_cols] = df_week[week_cols].apply(pd.to_numeric, errors="coerce").fillna(0)
-
-                    ############# MONTHLY ###########
-
-                    result = (
-                        df.loc[1, month_cols] /
-                        df.loc[0, month_cols].replace(0, pd.NA)
-                    ) * 100
-
-                    df.loc[3, month_cols] = result.fillna(0).round(2)
-
-                    ########### WEEKLY ###############
-
-                    result_week = (
-                        df_week.loc[1, week_cols] / 
-                        df_week.loc[0, week_cols].replace(0, pd.NA)
-                    )* 100
-
-                    df_week.loc[3, week_cols] = result_week.fillna(0).round(2)
-
-
-                    ###########
-
-                    df["Customer"] = customer
-                    df["Station"] = station
-                    df["Project"] = filename
-
-                    all_data.append(df)
-
-                    df_week["Customer"] = customer
-                    df_week["Station"] = station
-                    df_week["Project"] = filename
-
-                    weekly_data.append(df_week)
-
-                    # ==============================
-                    # MONTHLY DETAIL
-                    # ==============================
-                    monthly_melt = pd.DataFrame({
-                        "Month": month_cols,
-                        "TOTAL QTY IN": df.loc[0, month_cols].values,
-                        "TOTAL QTY PASS": df.loc[1, month_cols].values,
-                        "TOTAL QTY FAIL": df.loc[2, month_cols].values
-                    })
-
-                    monthly_melt["Customer"] = customer
-                    monthly_melt["Station"] = station
-
-                    monthly_detail_data.extend(monthly_melt.to_dict("records"))
-
-                    for week in week_cols:
-                        if week in df_week.columns:
-
-                            qty_in = pd.to_numeric(df_week.loc[0, week], errors="coerce")
-                            qty_pass = pd.to_numeric(df_week.loc[1, week], errors="coerce")
-                            qty_fail = pd.to_numeric(df_week.loc[2, week], errors="coerce")
-
-                            yield_value = 0
-
-                            if pd.notna(qty_in) and qty_in != 0:
-                                yield_value = round((qty_pass/qty_in)*100, 2)
-
-                            weekly_detail_data.append({
-                                "Customer": customer,
-                                "Station": station,
-                                "Week": week,
-                                "TOTAL QTY IN": qty_in if pd.notna(qty_in) else 0,
-                                "TOTAL QTY PASS": qty_pass if pd.notna(qty_pass) else 0,
-                                "TOTAL QTY FAIL": qty_fail if pd.notna(qty_fail) else 0,
-                                "TOTAL YIELD (%)": yield_value
-                            })
-
-                    # ==============================
-                    # FAIL MODE
-                    # ==============================
-                    df_fail = pd.read_excel(xls, sheet_name=3, usecols = "A:N", skiprows=7, nrows=793)
-
-                    df_fail.rename(columns={"FAIL MODE / LOC": "FailMode"}, inplace=True)
-                    df_fail = df_fail[df_fail["FailMode"].notna()]
-
+                    with pd.ExcelFile(full_path, engine="openpyxl") as xls:
+    
+                        df = pd.read_excel(xls, sheet_name=3, usecols ="A:N", skiprows=1, nrows=5)
+                        
+                        df.columns = df.columns.str.strip()
+    
+                        df.rename(columns={
+                            "Unnamed: 0": "QTY",
+                            "Unnamed:0": "QTY"
+                        }, inplace=True)
+    
+                        if "QTY" not in df.columns:
+                            df.insert(0, "QTY", ["QTY IN","QTY PASS","QTY FAIL","YIELD","OTHER"][:len(df)])
+                        
+                        month_cols= df.columns[1:]
+    
+                        df[month_cols] = df[month_cols].astype(float)
+    
+                        df_week = pd.read_excel(
+                            xls,
+                            sheet_name=2,
+                            usecols="A:BA",
+                            skiprows=1,   # karena row pertama kosong
+                            nrows=4       # QTY IN, PASS, FAIL, YIELD
+                        )
+                        
+    
+                        df_week.columns = df_week.columns.str.strip()
+    
+                        df_week.rename(columns={
+                            "Unnamed: 0" : "QTYWeek"
+                        }, inplace=True)
+    
+                        if "QTYWeek" not in df_week.columns:
+                            df_week.insert(0, "QTYWeek", ["QTY IN","QTY PASS","QTY FAIL","YIELD"])
+                        
+                        week_cols = df_week.columns[1:]
+                        
+                        df_week[week_cols] = df_week[week_cols].apply(pd.to_numeric, errors="coerce").fillna(0)
+    
+                        ############# MONTHLY ###########
+    
+                        result = (
+                            df.loc[1, month_cols] /
+                            df.loc[0, month_cols].replace(0, pd.NA)
+                        ) * 100
+    
+                        df.loc[3, month_cols] = result.fillna(0).round(2)
+    
+                        ########### WEEKLY ###############
+    
+                        result_week = (
+                            df_week.loc[1, week_cols] / 
+                            df_week.loc[0, week_cols].replace(0, pd.NA)
+                        )* 100
+    
+                        df_week.loc[3, week_cols] = result_week.fillna(0).round(2)
+    
+    
+                        ###########
+    
+                        df["Customer"] = customer
+                        df["Station"] = station
+                        df["Project"] = filename
+    
+                        all_data.append(df)
+    
+                        df_week["Customer"] = customer
+                        df_week["Station"] = station
+                        df_week["Project"] = filename
+    
+                        weekly_data.append(df_week)
+    
+                        # ==============================
+                        # MONTHLY DETAIL
+                        # ==============================
+                        monthly_melt = pd.DataFrame({
+                            "Month": month_cols,
+                            "TOTAL QTY IN": df.loc[0, month_cols].values,
+                            "TOTAL QTY PASS": df.loc[1, month_cols].values,
+                            "TOTAL QTY FAIL": df.loc[2, month_cols].values
+                        })
+    
+                        monthly_melt["Customer"] = customer
+                        monthly_melt["Station"] = station
+    
+                        monthly_detail_data.extend(monthly_melt.to_dict("records"))
+    
+                        for week in week_cols:
+                            if week in df_week.columns:
+    
+                                qty_in = pd.to_numeric(df_week.loc[0, week], errors="coerce")
+                                qty_pass = pd.to_numeric(df_week.loc[1, week], errors="coerce")
+                                qty_fail = pd.to_numeric(df_week.loc[2, week], errors="coerce")
+    
+                                yield_value = 0
+    
+                                if pd.notna(qty_in) and qty_in != 0:
+                                    yield_value = round((qty_pass/qty_in)*100, 2)
+    
+                                weekly_detail_data.append({
+                                    "Customer": customer,
+                                    "Station": station,
+                                    "Week": week,
+                                    "TOTAL QTY IN": qty_in if pd.notna(qty_in) else 0,
+                                    "TOTAL QTY PASS": qty_pass if pd.notna(qty_pass) else 0,
+                                    "TOTAL QTY FAIL": qty_fail if pd.notna(qty_fail) else 0,
+                                    "TOTAL YIELD (%)": yield_value
+                                })
+    
+                        # ==============================
+                        # FAIL MODE
+                        # ==============================
+                        df_fail = pd.read_excel(xls, sheet_name=3, usecols = "A:N", skiprows=7, nrows=793)
+    
+                        df_fail.rename(columns={"FAIL MODE / LOC": "FailMode"}, inplace=True)
+                        df_fail = df_fail[df_fail["FailMode"].notna()]
+    
                     df_fail[months] = df_fail[months].astype(float).fillna(0)
-
+    
                     ############## WEEKLY
-
+    
                     df_fail_week = pd.read_excel(xls, sheet_name=2, usecols="A:BA", skiprows=7, nrows=793)
-                    
+                        
                     df_fail_week.columns = df_fail_week.columns.str.strip()
-
+    
                     df_fail_week.rename(columns={
                         "FAIL MODE / LOC": "FailMode",
                         "Fail Mode": "FailMode",
                         "FAIL MODE": "FailMode",
                         "Fail_Mode": "FailMode"
                     }, inplace=True)
-                    
+                        
                     df_fail_week = df_fail_week[df_fail_week["FailMode"].notna()]
-
+    
                     df_fail_week[weeks] = df_fail_week[weeks].astype(float).fillna(0)
+
+                    ###### batas week #############
 
                     ##############
 
