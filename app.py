@@ -221,7 +221,7 @@ if uploaded_file:
                     n_bars = len(df_filtered)
                     fig_height =  max(6, n_bars * 0.6)
 
-                    #fig, ax = plt.subplots(figsize=(14, fig_height))
+                    fig, ax = plt.subplots(figsize=(14, fig_height))
                     
                     df_filtered = df_filtered.copy()
 
