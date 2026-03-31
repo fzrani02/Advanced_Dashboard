@@ -201,24 +201,24 @@ def process_rty_7z(uploaded_file):
                         df_fail.rename(columns={"FAIL MODE / LOC": "FailMode"}, inplace=True)
                         df_fail = df_fail[df_fail["FailMode"].notna()]
     
-                    df_fail[months] = df_fail[months].astype(float).fillna(0)
-    
-                    ############## WEEKLY
-    
-                    df_fail_week = pd.read_excel(xls, sheet_name=2, usecols="A:BA", skiprows=7, nrows=793)
-                        
-                    df_fail_week.columns = df_fail_week.columns.str.strip()
-    
-                    df_fail_week.rename(columns={
-                        "FAIL MODE / LOC": "FailMode",
-                        "Fail Mode": "FailMode",
-                        "FAIL MODE": "FailMode",
-                        "Fail_Mode": "FailMode"
-                    }, inplace=True)
-                        
-                    df_fail_week = df_fail_week[df_fail_week["FailMode"].notna()]
-    
-                    df_fail_week[weeks] = df_fail_week[weeks].astype(float).fillna(0)
+                        df_fail[months] = df_fail[months].astype(float).fillna(0)
+        
+                        ############## WEEKLY
+        
+                        df_fail_week = pd.read_excel(xls, sheet_name=2, usecols="A:BA", skiprows=7, nrows=793)
+                            
+                        df_fail_week.columns = df_fail_week.columns.str.strip()
+        
+                        df_fail_week.rename(columns={
+                            "FAIL MODE / LOC": "FailMode",
+                            "Fail Mode": "FailMode",
+                            "FAIL MODE": "FailMode",
+                            "Fail_Mode": "FailMode"
+                        }, inplace=True)
+                            
+                        df_fail_week = df_fail_week[df_fail_week["FailMode"].notna()]
+        
+                        df_fail_week[weeks] = df_fail_week[weeks].astype(float).fillna(0)
 
                     ###### batas week #############
 
