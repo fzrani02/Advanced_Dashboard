@@ -244,7 +244,7 @@ if uploaded_file:
                         total_values = pass_values + fail_values
 
                         unique_customers = df_filtered["Customer"].unique()
-                        cmap = plt.cm.get_cmap(len(unique_customers)))
+                        cmap = plt.cm.get_cmap("tab20", len(unique_customers))
                         
                         color_map_station = {
                             cust: cmap(i)
