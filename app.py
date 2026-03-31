@@ -237,6 +237,8 @@ if uploaded_file:
                        # df_filtered["Customer"] + " | " + df_filtered["Station"]
                     #)
 
+                    df_filtered["Station_Label"] = df_filtered["Station"]
+
                     if metric == "TOTAL QTY":
 
                         pass_values = df_filtered["TOTAL QTY PASS"]
