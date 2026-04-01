@@ -232,7 +232,7 @@ if uploaded_file:
                         colors = plt.cm.tab20(range(len(unique_customers)))
                         
                         color_map_station = {
-                            cust: color[i]
+                            cust: colors[i]
                             for i, cust in enumerate(unique_customers)
                         }
 
