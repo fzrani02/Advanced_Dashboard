@@ -965,62 +965,10 @@ if uploaded_file:
                         st.warning("No weekly data available.")
                 else:
                     st.info("Please select at least one customer")
-                    
-                        
-
+                 
             with tab4:
                 st.subheader("Daily")
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
