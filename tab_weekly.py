@@ -152,7 +152,7 @@ def render_weekly_tab(df_qty_weekly):
                         i,
                         int(pass_val),
                         ha='left', va='center',
-                        fontsize=pass_size, fontweight='bold', color='blue'
+                        fontsize=pass_size, fontweight='bold', color='darkblue'
                     )
 
                 # LABEL TOTAL 
@@ -167,13 +167,12 @@ def render_weekly_tab(df_qty_weekly):
                         fontsize=total_size, fontweight='bold', color='red'
                     )
 
-            #legend_elements = [
-                #Patch(facecolor=color_map_project[proj], label=proj)
-                #for proj in unique_projects
-            #]
-            legend_elements.append(Patch(facecolor="red", label="TOTAL"))
-            legend_elements.append(Patch(facecolor="blue", label="QTY PASS"))
-            legend_elements.append(Patch(facecolor="black", label="QTY FAIL"))   
+            legend_elements = [
+                Patch(facecolor="red", label="TOTAL"),
+                Patch(facecolor="darkblue", label="QTY PASS"),
+                Patch(facecolor="black", label="QTY FAIL")
+            ]
+             
             ax.legend(handles=legend_elements, title="Project", bbox_to_anchor=(1.02, 1), loc="upper left")
             
             ax.set_xlabel("Quantity")
