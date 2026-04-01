@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 
 def render_weekly_tab(df_qty_weekly):
     st.subheader("Quantity and Yield per Week")
@@ -92,7 +93,16 @@ def render_weekly_tab(df_qty_weekly):
             fail_values = df_plot["FAIL"]
             total_values = df_plot["IN"]
 
-            colors = plt.cm.tab20c(range(len(df_plot)))
+            unique_projects = df_plot["Project"].unique()
+
+            colors = plt.cm.tab20c(range(len(unique_projects)))
+
+            color_map_project = {
+                proj: colors[i]
+                for i, proj i in enumerate(unique_projects)
+            }
+
+            pass_colors = df_plot["Project"].map(color_map_project)
 
             ax.barh(
                 df_plot["Project"],
@@ -105,22 +115,67 @@ def render_weekly_tab(df_qty_weekly):
                 df_plot["Project"],
                 pass_values,
                 left=fail_values,
-                color=colors,
+                color=pass_colors,
                 label="PASS"
             )
 
-            for i in range(len(df_plot)):
-                if fail_values[i] > 0:
-                    ax.text(fail_values[i], i, int(fail_values[i]), va='center')
+            n_bars = len(df_plot)
+            base_size = max(6, 12 - int(n_bars * 0.4))
 
-                if pass_values[i] > 0:
-                    ax.text(fail_values[i]+pass_values[i], i, int(pass_values[i]), va='center')
+            fail_size = base_size - 1
+            pass_size = base_size 
+            total_size = base_size + 3
 
-                if total_values[i] > 0:
-                    ax.text(total_values[i]+1, i, int(total_values[i]), color='red', fontweight='bold')
+            extra = total_values.max() * 0.002
+            base_offset = total_values.max() *0.005
+            char_eidht = total_values.max() * 0.012
+
+            for i in range(n_bars):
+                fail_val = fail_values.iloc[i] 
+                pass_val = pass_values.iloc[i]
+                total_val = total_values.iloc[i] 
+
+                # LABEL FAIL (HITAM)
+                if fail_val > 0:
+                    ax.text(
+                        fail_val + extra,
+                        i, 
+                        int(fail_val),
+                        ha='left', va='center',
+                        fontsize=fail_size, fontweight='bold', color='black'
+                    )
+
+                # LABEL PASS
+                if pass_val > 0:
+                    ax.text(
+                        (fail_val + pass_val) + base_offset,
+                        i,
+                        int(pass_val),
+                        ha='left', va='center',
+                        fontsize=pass_size, fontweight='bold', color=pass_colors.iloc[i]
+                    )
+
+                # LABEL TOTAL 
+                if total_val >0 :
+                    digit = len(str(int(pass_val))) if pass_val > 0 else 0
+                    dynamic.offset = base_offset + (digit * char_width) + (total_values.max() * 0.005)
+                    ax.text(
+                        total_val + dynamic_offset, 
+                        i, 
+                        int(total_val),
+                        ha='left', va='center', 
+                        fontsize=total_size, fontweight='bold', color='red'
+                    )
+
+            legend_elements = [
+                Patch(facecolor=color_map_project[proj], label=proj)
+                for proj in unique_projects
+            ]
+            legend_elements.append(Patch(facecolor="black", label="FAIL"))   
+            ax.legend(handles=legend_elements, title="Project", bbox_to_anchor=(1.02, 1), loc="upper left")
             
             ax.set_xlabel("Quantity")
-            ax.set_title(f"Total Quantity per Project ({week_start} - {week_end})")
+            ax.set_title(f"Total Quantity (QTY Fail+ QTY Pass) per Project ({week_start} - {week_end})")
             ax.set_xlim(0, total_values.max()*1.2)
             
         else: 
