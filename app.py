@@ -135,26 +135,26 @@ if uploaded_file:
         with tab1:
             st.header("Monthly Integrated Data")
             st.markdown("#### Quantity and Yield per Month")
-            AgGrid(df_qty)
+            st.dataframe(df_qty, use_container_width=True)
 
             st.markdown("#### Top 5 Fail Mode per Month")
-            AgGrid(df_fail)
+            st.dataframe(df_fail, use_container_width=True)
 
             st.markdown("#### Monthly Detail")
-            AgGrid(df_monthly)
+            st.dataframe(df_monthly, use_container_width=True)
             
             st.markdown("----")
             
             st.header("Weekly Integrated Data")
             
             st.markdown("#### Quantity and Yield per Week")
-            AgGrid(df_qty_weekly)
+            st.dataframe(df_qty_weekly, use_container_width=True)
             
             st.markdown("#### Top 5 Fail Mode per Week")
-            AgGrid(df_fail_weekly)
+            st.dataframe(df_fail_weekly, use_container_width=True)
             
             st.markdown("#### Weekly Detail")
-            AgGrid(df_weekly_detail)
+            st.dataframe(df_weekly_detail, use_container_width=True)
             
             st.markdown("----")
 
@@ -777,17 +777,17 @@ if uploaded_file:
 
 ########################################################################################################################################################################
                 
-            with tab3:
-                if df_qty_weekly is not None and not df_qty_weekly.empty:
-                    render_weekly_tab(df_qty_weekly)
+        with tab3:
+            if df_qty_weekly is not None and not df_qty_weekly.empty:
+                render_weekly_tab(df_qty_weekly)
 
-                else:
-                    st.warning("No weekly data available.")
+            else:
+                st.warning("No weekly data available.")
 
             
 ################################################################################################################
-            with tab4:
-                st.subheader("Daily")
+        with tab4:
+            st.subheader("Daily")
             
 
 
