@@ -152,7 +152,7 @@ def render_weekly_tab(df_qty_weekly):
                         i,
                         int(pass_val),
                         ha='left', va='center',
-                        fontsize=pass_size, fontweight='bold', color=pass_colors.iloc[i]
+                        fontsize=pass_size, fontweight='bold', color='blue'
                     )
 
                 # LABEL TOTAL 
