@@ -185,8 +185,6 @@ if uploaded_file:
         
             available_months = [m for m in month_order if m in df_monthly["Month"].unique()]
 
-           
-
             # ===============
             # Filter Customer
             # ===============
@@ -218,26 +216,11 @@ if uploaded_file:
                
                 if not df_filtered.empty:
 
-                    n_bars = len(df_filtered)
-                    fig_height =  max(6, n_bars * 0.6)
-
-                    fig, ax = plt.subplots(figsize=(14, fig_height))
-                    
+                    fig, ax = plt.subplots(figsize=(14,6))
                     df_filtered = df_filtered.copy()
-
-                    df_filtered["TOTAL"] = (
-                        df_filtered["TOTAL QTY PASS"] +
-                        df_filtered["TOTAL QTY FAIL"]
+                    df_filtered["Station_Label"] = (
+                        df_filtered["Customer"] + " | " + df_filtered["Station"]
                     )
-
-                    df_filtered = df_filtered.sort_values("TOTAL", ascending= True)
-                    df_filtered = df_filtered.tail(10)
-                    
-                    #df_filtered["Station_Label"] = (
-                       # df_filtered["Customer"] + " | " + df_filtered["Station"]
-                    #)
-
-                    df_filtered["Station_Label"] = df_filtered["Station"]
 
                     if metric == "TOTAL QTY":
 
@@ -246,10 +229,10 @@ if uploaded_file:
                         total_values = pass_values + fail_values
 
                         unique_customers = df_filtered["Customer"].unique()
-                        cmap = plt.cm.get_cmap("tab20", len(unique_customers))
+                        colors = plt.cm.tab20(range(len(unique_customers)))
                         
                         color_map_station = {
-                            cust: cmap(i)
+                            cust: color[i]
                             for i, cust in enumerate(unique_customers)
                         }
 
@@ -278,11 +261,11 @@ if uploaded_file:
                         fail_size = base_size - 1
                         pass_size = base_size
                         total_size = base_size + 2
-                        #extra = total_values.max() * 0.002
+                        extra = total_values.max() * 0.002
 
                         # ADD SPACE PER LABEL 
-                        #base_offset = total_values.max() * 0.005
-                        #char_width = total_values.max() * 0.012
+                        base_offset = total_values.max() * 0.005
+                        char_width = total_values.max() * 0.012
 
                         for i in range(n_bars):
 
@@ -291,12 +274,22 @@ if uploaded_file:
                             total_val = total_values.iloc[i]
 
                             # FAIL label (hitam, diatas FAIL bar)
-                            
+                            if fail_val > 0:
+                                ax.text(
+                                    fail_val + extra,
+                                    i,
+                                    int(fail_val),
+                                    ha='left',
+                                    va='center',
+                                    fontsize=fail_size,
+                                    fontweight='bold',
+                                    color='black'
+                                )
 
                             # PASS label (warna customer, di atas bar PASS)
                             if pass_val > 0:
                                 ax.text(
-                                    fail_val + pass_val + 2,
+                                    (fail_val + pass_val) + base_offset,
                                     i,
                                     int(pass_val),
                                     ha='left',
@@ -308,10 +301,10 @@ if uploaded_file:
 
                             # TOTAL label (di atas stack)
                             if total_val > 0:
-                                #digit = len(str(int(pass_val))) if pass_val > 0 else 0 
-                                #dynamic_offset = base_offset + (digit * char_width) + (total_values.max() * 0.005)
+                                digit = len(str(int(pass_val))) if pass_val > 0 else 0 
+                                dynamic_offset = base_offset + (digit * char_width) + (total_values.max() * 0.005)
                                 ax.text(
-                                    total_val + 8,
+                                    total_val + dynamic_offset,
                                     i,
                                     int(total_val),
                                     ha='left',
@@ -330,7 +323,7 @@ if uploaded_file:
                             Patch(facecolor="black", label="FAIL")
                         )
 
-                        ax.legend(handles=legend_elements, title="Index", bbox_to_anchor=(1.02, 1), loc="upper right")
+                        ax.legend(handles=legend_elements, title="Index", bbox_to_anchor=(1.02, 1), loc="upper left")
   
                         ax.set_xlabel("Quantity")
                         ax.set_title(f"Total Quantity (QTY Fail + QTY Pass) per Station - {month}")
@@ -368,7 +361,7 @@ if uploaded_file:
                             for cust in unique_customers
                         ]
 
-                        ax.legend(handles=legend_elements, title="Customer", bbox_to_anchor=(1.02, 1), loc="upper right")
+                        ax.legend(handles=legend_elements, title="Customer", bbox_to_anchor=(1.02, 1), loc="upper left")
                         ax.set_xlabel("Total Yield (%)")
                         ax.set_title(f"Total Yield (%) per Station - {month}")
                         ax.set_xlim(0, 115)
@@ -500,7 +493,7 @@ if uploaded_file:
                             for station in unique_stations
                         ]
 
-                        ax2.legend(handles=legend_elements_station, title="Station", bbox_to_anchor=(1.02, 1), loc="upper right")
+                        ax2.legend(handles=legend_elements_station, title="Station", bbox_to_anchor=(1.02, 1), loc="upper left")
 
                         ax2.set_xlabel("Fail Count", fontsize = 12)
                         ax2.set_ylabel("Station | Fail Mode")
