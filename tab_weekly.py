@@ -99,7 +99,7 @@ def render_weekly_tab(df_qty_weekly):
 
             color_map_project = {
                 proj: colors[i]
-                for i, proj i in enumerate(unique_projects)
+                for i, proj in enumerate(unique_projects)
             }
 
             pass_colors = df_plot["Project"].map(color_map_project)
