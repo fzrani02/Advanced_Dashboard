@@ -248,7 +248,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 df_fail_filtered = df_fail_filtered.sort_values(['Week_Cat','Count'], ascending=[True, False]).reset_index(drop=True)
                 
                 # Buat label Fail Mode 
-                df_fail_filtered["Label"] = df_fail_filtered["Label"] = df_fail_filtered["Week"] + " | " + df_fail_filtered["Top 5 Fail Mode"]
+                df_fail_filtered["Label"] = df_fail_filtered["Label"] + " | " + df_fail_filtered["Top 5 Fail Mode"]
 
                 # Mapping unique
                 unique_weeks = df_fail_filtered["Week"].unique()
