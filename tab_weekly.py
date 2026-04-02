@@ -265,7 +265,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 #dynamic_width_fail = min(max(14, n_bars_fail * 0.5), 30)
                 #dynamic_height_fail = max(6, n_bars_fail * 0.8)
 
-                fig2, ax2 = plt.subplots(figsize= (14, 8))
+                fig2, ax2 = plt.subplots(figsize= (14, 6))
 
                 bars = ax2.barh(
                     df_fail_filtered["Label"],
@@ -290,7 +290,9 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                     Patch(facecolor=color_map_week[w], label=w)
                     for w in unique_weeks
                 ]
-
+                
+                ax2.legend(handles=legend_elements_week, title="Week", loc="upper right")
+                
                 ax2.set_xlabel("Fail Count", fontsize=12)
                 ax2.set_title(
                     f"{station_week} - Top 3 Fail Mode ({week_start} - {week_end})",
