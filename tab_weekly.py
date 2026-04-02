@@ -17,7 +17,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
     )
     
     station_list = (
-        df_qty_weekly[df_weekly_detail["Customer"] == customer_week]["Station"]
+        df_weekly_detail[df_weekly_detail["Customer"] == customer_week]["Station"]
         .dropna()
         .unique()
     )
