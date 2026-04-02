@@ -12,12 +12,12 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
 
     customer_week = st.selectbox(
         "Choose Customer",
-        sorted(df_qty_detail["Customer"].unique()),
+        sorted(df_weekly_detail["Customer"].unique()),
         key="weekly_customer"
     )
     
     station_list = (
-        df_qty_weekly[df_qty_detail["Customer"] == customer_week]["Station"]
+        df_qty_weekly[df_weekly_detail["Customer"] == customer_week]["Station"]
         .dropna()
         .unique()
     )
