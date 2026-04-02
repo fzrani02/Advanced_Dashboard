@@ -38,6 +38,12 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
         )
 
     with col2:
+        target_week = "WW12"
+        if target_week in available_weeks:
+            default_index = available_weeks.index(target_week)
+        else:
+            default_index = len(available_weeks) - 1 
+            
         week_end = st.selectbox(
             "Week To",
             available_weeks, 
