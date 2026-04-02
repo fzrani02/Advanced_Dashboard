@@ -262,7 +262,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
 
                 n_bars_fail = len(df_fail_filtered)
                 dynamic_width_fail = min(max(14, n_bars_fail * 0.5), 30)
-                dynamic_height_fail = max(6, n_bars_fail * 0.6)
+                dynamic_height_fail = max(6, n_bars_fail * 0.8)
 
                 fig2, ax2 = plt.subplots(figsize= (dynamic_width_fail, dynamic_height_fail))
 
