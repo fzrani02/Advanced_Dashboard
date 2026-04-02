@@ -69,7 +69,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
     df_plot = df_plot.sort_values('Week_Cat').reset_index(drop=True)
 
     if not df_plot.empty:
-        fig, ax = plt.subplots(figsize=(14, max(6, len(df_plot) * 0.6)))
+        fig, ax = plt.subplots(figsize=(14,6))
 
         if metric == "TOTAL QTY":
             pass_values = df_plot["TOTAL QTY PASS"]
@@ -107,7 +107,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
             )
 
             n_bars = len(df_plot)
-            base_size = max(8, 12 - int(n_bars * 0.2))
+            base_size = max(6, 12 - int(n_bars * 0.15))
 
             fail_size = base_size - 1
             pass_size = base_size 
