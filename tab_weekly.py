@@ -128,7 +128,7 @@ def render_weekly_tab(df_qty_weekly):
 
             extra = total_values.max() * 0.002
             base_offset = total_values.max() *0.005
-            char_width = total_values.max() * 0.012
+            char_width = total_values.max() * 0.025
 
             for i in range(n_bars):
                 fail_val = fail_values.iloc[i] 
@@ -158,7 +158,7 @@ def render_weekly_tab(df_qty_weekly):
                 # LABEL TOTAL 
                 if total_val >0 :
                     digit = len(str(int(pass_val))) if pass_val > 0 else 0
-                    dynamic_offset = base_offset + (digit * char_width) + (total_values.max() * 0.005)
+                    dynamic_offset = base_offset + (digit * char_width) + (total_values.max() * 0.02)
                     ax.text(
                         total_val + dynamic_offset, 
                         i, 
