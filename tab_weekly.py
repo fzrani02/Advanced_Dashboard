@@ -3,20 +3,21 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
-def render_weekly_tab(df_qty_weekly):
+def render_weekly_tab(df_qty_weekly, df_weekly_detail):
     st.subheader("Quantity and Yield per Week")
 
     week_order = [f"WW{str(i).zfill(2)}" for i in range(1,53)]
-    available_weeks = [w for w in week_order if w in df_qty_weekly.columns]
+    
+    available_weeks = [w for w in week_order if w in df_qty_detail["Week"].unique()]
 
     customer_week = st.selectbox(
         "Choose Customer",
-        sorted(df_qty_weekly["Customer"].unique()),
+        sorted(df_qty_detail["Customer"].unique()),
         key="weekly_customer"
     )
     
     station_list = (
-        df_qty_weekly[df_qty_weekly["Customer"] == customer_week]["Station"]
+        df_qty_weekly[df_qty_detail["Customer"] == customer_week]["Station"]
         .dropna()
         .unique()
     )
@@ -54,77 +55,63 @@ def render_weekly_tab(df_qty_weekly):
     end_idx = week_order.index(week_end)
 
     selected_weeks = week_order[start_idx:end_idx+1]
-    
-    df_station = df_qty_weekly[
-        (df_qty_weekly["Customer"] == customer_week) &
-        (df_qty_weekly["Station"] == station_week)
+
+    # =============
+    # FILTER DATA SHEET 6
+    # =============
+    df_plot = df_weekly_detail[
+        (df_weekly_detail["Customer"] == customer_week) &
+        (df_weekly_detail["Station"] == station_week) &
+        (df_weekly_detail["Week"].isin(selected_weeks))
     ].copy()
 
-    # ========================
-    # HITUNG TOTAL PER PROJECT
-    # ========================
-    projects = df_station["Project"].unique()
-    project_data = []
-
-    for proj in projects:
-        df_proj = df_station[df_station["Project"] == proj]
-
-        qty_in = df_proj[df_proj["QTYWeek"] == "QTY IN"][selected_weeks].sum(axis=1).sum()
-        qty_pass = df_proj[df_proj["QTYWeek"] == "QTY PASS"][selected_weeks].sum(axis=1).sum()
-        qty_fail = df_proj[df_proj["QTYWeek"] == "QTY FAIL"][selected_weeks].sum(axis=1).sum()
-
-        yield_val = (qty_pass / qty_in * 100) if qty_in > 0 else 0
-
-        project_data.append({
-            "Project": proj.replace(".xlsx",""),
-            "PASS": qty_pass,
-            "FAIL": qty_fail,
-            "IN": qty_in,
-            "YIELD": yield_val
-        })
-
-    df_plot = pd.DataFrame(project_data)
+    df_plot['Week_Cat'] = pd.Categorical(df_plot['Week'], categories=week_order, ordered=True)
+    df_plot = df_plot.sort_values('Week_Cat').reset_index(drop=True)
 
     if not df_plot.empty:
-        fig, ax= plt.subplots(figsize=(14,6))
+        fig, ax = plt.subplots(figsize=(14, max(6, len(df_plot) * 0.6)))
 
         if metric == "TOTAL QTY":
-            pass_values = df_plot["PASS"]
-            fail_values = df_plot["FAIL"]
-            total_values = df_plot["IN"]
+            pass_values = df_plot["TOTAL QTY PASS"]
+            fail_values = df_plot["TOTAL QTY FAIL"]
+            total_values = df_plot["TOTAL QTY IN"]
+            y_labels = df_plot["Week"]
 
-            unique_projects = df_plot["Project"].unique()
+            #unique_projects = df_plot["Project"].unique()
 
-            colors = plt.cm.tab20c(range(len(unique_projects)))
+            #colors = plt.cm.tab20c(range(len(unique_projects)))
 
-            color_map_project = {
-                proj: colors[i]
-                for i, proj in enumerate(unique_projects)
-            }
+            #color_map_project = {
+                #proj: colors[i]
+                #for i, proj in enumerate(unique_projects)
+            #}
 
-            pass_colors = df_plot["Project"].map(color_map_project)
+            #pass_colors = df_plot["Project"].map(color_map_project)
 
             ax.barh(
-                df_plot["Project"],
+                y_labels,
+                #df_plot["Project"],
                 fail_values,
                 color="black",
-                label="FAIL"
+                label="QTY FAIL"
             )
                 
             ax.barh(
-                df_plot["Project"],
+                y_labels, 
+                #df_plot["Project"],
                 pass_values,
                 left=fail_values,
-                color=pass_colors,
-                label="PASS"
+                #color=pass_colors,
+                color="darkblue", 
+                label="QTY PASS"
             )
 
             n_bars = len(df_plot)
-            base_size = max(6, 12 - int(n_bars * 0.4))
+            base_size = max(8, 12 - int(n_bars * 0.2))
 
             fail_size = base_size - 1
             pass_size = base_size 
-            total_size = base_size + 3
+            total_size = base_size + 2
 
             extra = total_values.max() * 0.002
             base_offset = total_values.max() *0.005
@@ -168,7 +155,7 @@ def render_weekly_tab(df_qty_weekly):
                     )
 
             legend_elements = [
-                Patch(facecolor="red", label="TOTAL"),
+                Patch(facecolor="red", label="QTY IN (TOTAL)"),
                 Patch(facecolor="darkblue", label="QTY PASS"),
                 Patch(facecolor="black", label="QTY FAIL")
             ]
@@ -176,33 +163,41 @@ def render_weekly_tab(df_qty_weekly):
             ax.legend(handles=legend_elements, title="Project", bbox_to_anchor=(1.02, 1), loc="upper left")
             
             ax.set_xlabel("Quantity")
-            ax.set_title(f"Total Quantity (QTY Fail+ QTY Pass) per Project ({week_start} - {week_end})")
-            ax.set_xlim(0, total_values.max()*1.4)
+            ax.set_title(f"{station_week} - Weekly Total Quantity ({week_start} - {week_end})", fontsize=14, fontweight="bold")
+            ax.set_xlim(0, total_values.max()*1.4 if total_values.max() > 0 else 10)
             
-        else: 
-            colors = plt.cm.tab20c(range(len(df_plot)))
-            df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
+        else:
+            y_labels = df_plot["Week"]
+            yield_values = df_plot["TOTAL YIELD (%)"]
+
+            
+
+            ###
+            #colors = plt.cm.tab20c(range(len(df_plot)))
+            #df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
 
             ax.barh(
-                df_plot["Project"],
-                df_plot["YIELD"],
-                color=colors
+                y_labels, 
+                yield_values, 
+                color="darkblue"
             )
 
-            for i, value in enumerate(df_plot["YIELD"]):
+            for i, value in enumerate(yield_values):
                 ax.text(
                     value+1, 
                     i, 
-                    round(value,2),
+                    f"{round(value,2)}%",
                     va='center', 
-                    fontsize=8 
+                    fontsize=10
                 )
 
             ax.set_xlabel("Yield (%)")
             ax.set_xlim(0,115)
-            ax.set_title(f"Total Yield per Project - ({week_start} - {week_end})")
+            ax.set_title(f"{station_week} - Weekly Total Yield ({week_start} - {week_end})", fontsize=14, fontweight="bold")
                         
-        ax.set_ylabel("Project")
+        ax.set_ylabel("Week")
+        ax.invert_yaxis()
+        
         plt.tight_layout()
         st.pyplot(fig)
         
