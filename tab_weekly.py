@@ -177,7 +177,7 @@ def render_weekly_tab(df_qty_weekly):
             
             ax.set_xlabel("Quantity")
             ax.set_title(f"Total Quantity (QTY Fail+ QTY Pass) per Project ({week_start} - {week_end})")
-            ax.set_xlim(0, total_values.max()*1.2)
+            ax.set_xlim(0, total_values.max()*1.4)
             
         else: 
             colors = plt.cm.tab20c(range(len(df_plot)))
