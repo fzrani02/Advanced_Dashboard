@@ -168,7 +168,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
                 Patch(facecolor="black", label="QTY FAIL")
             ]
              
-            ax.legend(handles=legend_elements, title="Project", bbox_to_anchor=(1.02, 1), loc="upper left")
+            ax.legend(handles=legend_elements, title="Quantity", bbox_to_anchor=(1.02, 1), loc="upper left")
             
             ax.set_xlabel("Quantity")
             ax.set_title(f"{station_week} - Weekly Total Quantity ({week_start} - {week_end})", fontsize=14, fontweight="bold")
