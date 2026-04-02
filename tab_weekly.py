@@ -158,7 +158,7 @@ def render_weekly_tab(df_qty_weekly):
                 # LABEL TOTAL 
                 if total_val >0 :
                     digit = len(str(int(pass_val))) if pass_val > 0 else 0
-                    dynamic_offset = base_offset + (digit * char_width) + (total_values.max() * 0.02)
+                    dynamic_offset = base_offset + (digit * char_width) + (total_values.max() * 0.007)
                     ax.text(
                         total_val + dynamic_offset, 
                         i, 
