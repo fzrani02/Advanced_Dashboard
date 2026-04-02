@@ -8,7 +8,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
 
     week_order = [f"WW{str(i).zfill(2)}" for i in range(1,53)]
     
-    available_weeks = [w for w in week_order if w in df_qty_detail["Week"].unique()]
+    available_weeks = [w for w in week_order if w in df_weekly_detail["Week"].unique()]
 
     customer_week = st.selectbox(
         "Choose Customer",
