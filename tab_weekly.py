@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
-def render_weekly_tab(df_qty_weekly, df_weekly_detail):
+def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
     st.subheader("Quantity and Yield per Week")
 
     week_order = [f"WW{str(i).zfill(2)}" for i in range(1,53)]
@@ -208,6 +208,100 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
         
         plt.tight_layout()
         st.pyplot(fig)
-        
+
+
+        ##################################
+
+        st.markdown("---")
+        st.subheader("Weekly Top 3 Fail Mode")
+
+        if df_fail_weekly is not None:
+            df_fail_filtered = df_fail_weekly[
+                (df_fail_weekly["Customer"] == customer_week) &
+                (df_fail_weekly["Station"] == station_week) &
+                (df_fail_weekly["Week"].isin(selected_weeks)) &
+            ].copy()
+
+            df_fail_filtered = (
+                df_fail_filtered
+                .groupby(["Week", "Top 5 Fail Mode"], as_index=False)
+                .agg({"Count":"sum"})
+            )
+
+            df_fail_filtered= df_fail_filtered[
+                (df_fail_filtered["Count"] > 0) &
+                (~df_fail_filtered["Top 5 Fail Mode"].isin(["No Fail Data", "Not Available"]))
+            ]
+
+            if not df_fail_filtered.empty:
+                df_fail_filtered = (
+                    df_fail_filtered
+                    .sort_values(["Week", "Count"], ascending=[True, False])
+                    .groupby("Week")
+                    .head(3)
+                )
+                
+                # Sort Chronological WW01-WW52
+                df_fail_filtered['Week_Cat'] = pd.Categorical(df_fail_filtered['Week'], categories=week_order, ordered=True)
+
+                # Sort tertinggi
+                df_fail_filtered = df_fail_filtered.sort_values(['Week_Cat','Count'], ascending=[True, False]).reset_index(drop=True)
+                
+                # Buat label Fail Mode 
+                df_fail_filtered["Label"] = df_fail_filtered["Top 3 Fail Mode"]
+
+                # Mapping unique
+                unique_weeks = df_fail_filtered["Week"].unique()
+                colors_week = plt.cm.tab20(range(len(unique_weeks)))
+                color_map_week = {
+                    week: colors_week[i % 20]
+                    for i, week in enumerate(unique_weeks)
+                }
+
+                bar_colors_fail = df_fail_filtered["Week"].map(color_map_week)
+
+                n_bars_fail = len(df_fail_filtered)
+                dynamic_width_fail = min(max(14, n_bars_fail * 0.5), 30)
+                dynamic_height_fail = max(6, n_bars_fail * 0.6)
+
+                fig2, ax2 = plt.subplots(figsize= (dyna,ic_width_fail, dynamic_height_fail))
+
+                bars = ax2.barh(
+                    df_fail_filtered["Label"],
+                    df_fail_filtered["Count"],
+                    color=bar_colors_fail 
+                )
+
+                max_val = df_fail_filtered["Count"].max()
+                offset = max_val * 0.02 if max_val > 0 else 0.5
+
+                for i, value in enumerate(df_fail_filtered["Count"]):
+                    ax2.text(
+                        value + offset, 
+                        i, 
+                        int(value),
+                        ha="left", va="center",
+                        fontsize=12, fontweight="bold", color="black"
+                    )
+
+                legend_elements_week = [
+                    Patch(facecolor=color_map_week[w], label=w)
+                    for w in unique_weeks
+                ]
+
+                ax2.set_xlabel("Fail Count", fontsize=12)
+                ax2.set_title(
+                    f"{station_week} - Top 3 Fail Mode ({week_start} - {week_end})",
+                    fontsize=14, fontweight="bold"
+                )
+
+                ax2.set_xlim(0, max_val * 1.25 if max_val > 0 else 5)
+                ax2.invert_yaxis()
+                plt.tight_layout()
+                st.pyplot(fig2)
+
+            else:
+                st.info("No fail found (all counts are 0) for teh selected range.")
+
     else:
         st.warning("No weekly data available.")
