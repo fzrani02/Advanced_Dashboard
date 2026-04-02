@@ -71,6 +71,8 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
     if not df_plot.empty:
         fig, ax = plt.subplots(figsize=(14,6))
 
+        bar_colors = [plt.cm.tab20(i % 20) for i in range(len(df_plot))]
+
         if metric == "TOTAL QTY":
             pass_values = df_plot["TOTAL QTY PASS"]
             fail_values = df_plot["TOTAL QTY FAIL"]
@@ -102,7 +104,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
                 pass_values,
                 left=fail_values,
                 #color=pass_colors,
-                color="darkblue", 
+                color=bar_colors, 
                 label="QTY PASS"
             )
 
@@ -179,7 +181,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
             ax.barh(
                 y_labels, 
                 yield_values, 
-                color="darkblue"
+                color=bar_colors
             )
 
             for i, value in enumerate(yield_values):
