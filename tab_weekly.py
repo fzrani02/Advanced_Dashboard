@@ -219,7 +219,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
             df_fail_filtered = df_fail_weekly[
                 (df_fail_weekly["Customer"] == customer_week) &
                 (df_fail_weekly["Station"] == station_week) &
-                (df_fail_weekly["Week"].isin(selected_weeks)) &
+                (df_fail_weekly["Week"].isin(selected_weeks)) 
             ].copy()
 
             df_fail_filtered = (
