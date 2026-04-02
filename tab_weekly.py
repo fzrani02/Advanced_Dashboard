@@ -75,7 +75,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
     df_plot = df_plot.sort_values('Week_Cat').reset_index(drop=True)
 
     if not df_plot.empty:
-        fig, ax = plt.subplots(figsize=(14,8))
+        fig, ax = plt.subplots(figsize=(14, 6))
 
         bar_colors = [plt.cm.tab20(i % 20) for i in range(len(df_plot))]
 
@@ -265,7 +265,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 #dynamic_width_fail = min(max(14, n_bars_fail * 0.5), 30)
                 #dynamic_height_fail = max(6, n_bars_fail * 0.8)
 
-                fig2, ax2 = plt.subplots(figsize= 14,8)
+                fig2, ax2 = plt.subplots(figsize= (14, 8))
 
                 bars = ax2.barh(
                     df_fail_filtered["Label"],
