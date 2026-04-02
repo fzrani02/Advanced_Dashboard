@@ -779,7 +779,7 @@ if uploaded_file:
                 
         with tab3:
             if df_qty_weekly is not None and not df_qty_weekly.empty:
-                render_weekly_tab(df_qty_weekly, df_weekly_detail)
+                render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly)
 
             else:
                 st.warning("No weekly data available.")
