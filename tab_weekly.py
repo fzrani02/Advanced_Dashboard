@@ -261,10 +261,11 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 bar_colors_fail = df_fail_filtered["Week"].map(color_map_week)
 
                 n_bars_fail = len(df_fail_filtered)
-                dynamic_width_fail = min(max(14, n_bars_fail * 0.5), 30)
-                dynamic_height_fail = max(6, n_bars_fail * 0.8)
+                
+                #dynamic_width_fail = min(max(14, n_bars_fail * 0.5), 30)
+                #dynamic_height_fail = max(6, n_bars_fail * 0.8)
 
-                fig2, ax2 = plt.subplots(figsize= (dynamic_width_fail, dynamic_height_fail))
+                fig2, ax2 = plt.subplots(figsize= 14,8)
 
                 bars = ax2.barh(
                     df_fail_filtered["Label"],
@@ -274,6 +275,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
 
                 max_val = df_fail_filtered["Count"].max()
                 offset = max_val * 0.02 if max_val > 0 else 0.5
+                font_size_fail = max(5, 10 - int(n_bars_fail * 0.1))
 
                 for i, value in enumerate(df_fail_filtered["Count"]):
                     ax2.text(
