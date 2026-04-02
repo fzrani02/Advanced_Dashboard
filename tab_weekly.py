@@ -47,7 +47,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail):
         week_end = st.selectbox(
             "Week To",
             available_weeks, 
-            index=len(available_weeks)-1,
+            index=default_index,
             key="week_end_baru"
         )
     
