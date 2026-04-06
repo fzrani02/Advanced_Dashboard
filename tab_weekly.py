@@ -375,7 +375,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 plt.tight_layout()
                 st.pyplot(fig3)
 
-                else:
+        else:
                     st.info("No project data available for the selected station.")
                 
                     
