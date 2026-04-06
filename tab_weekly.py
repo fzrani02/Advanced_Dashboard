@@ -342,7 +342,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                     n_bars_proj = len(df_yield_plot) 
                     fig3, ax3 = plt.subplots(figsize=(14,6))
                     unique_projs =df_yield_plot["Project"].unique()
-                    colors_proj = plt.cmplt.cm.tab20(range(len(unique_projs)))
+                    colors_proj = plt.cm.tab20(range(len(unique_projs)))
                     color_map_proj = {
                         proj : colors_pro[i%20]
                         for i, proj in enumerate(unique_projs)
