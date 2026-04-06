@@ -106,11 +106,9 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 
             ax.barh(
                 y_labels, 
-                #df_plot["Project"],
                 pass_values,
                 left=fail_values,
-                #color=pass_colors,
-                color=bar_colors, 
+                color="salmon", 
                 label="QTY PASS"
             )
 
@@ -163,9 +161,9 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                     )
 
             legend_elements = [
-                Patch(facecolor="red", label="QTY IN (TOTAL)"),
-                Patch(facecolor="darkblue", label="QTY PASS"),
-                Patch(facecolor="black", label="QTY FAIL")
+                Patch(facecolor="blue", label="QTY IN (TOTAL)"),
+                Patch(facecolor="green", label="QTY PASS"),
+                Patch(facecolor="red", label="QTY FAIL")
             ]
              
             ax.legend(handles=legend_elements, title="Quantity", bbox_to_anchor=(1.02, 1), loc="upper left")
