@@ -100,7 +100,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 y_labels,
                 #df_plot["Project"],
                 fail_values,
-                color="black",
+                color="red",
                 label="QTY FAIL"
             )
                 
@@ -147,7 +147,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                         i,
                         int(pass_val),
                         ha='left', va='center',
-                        fontsize=pass_size, fontweight='bold', color='darkblue'
+                        fontsize=pass_size, fontweight='bold', color='green'
                     )
 
                 # LABEL TOTAL 
@@ -159,7 +159,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                         i, 
                         int(total_val),
                         ha='left', va='center', 
-                        fontsize=total_size, fontweight='bold', color='red'
+                        fontsize=total_size, fontweight='bold', color='blue'
                     )
 
             legend_elements = [
