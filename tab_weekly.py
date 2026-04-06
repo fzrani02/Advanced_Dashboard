@@ -100,7 +100,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 y_labels,
                 #df_plot["Project"],
                 fail_values,
-                color="red",
+                color="firebrick",
                 label="QTY FAIL"
             )
                 
@@ -108,7 +108,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 y_labels, 
                 pass_values,
                 left=fail_values,
-                color="gold", 
+                color="lightgreen", 
                 label="QTY PASS"
             )
 
