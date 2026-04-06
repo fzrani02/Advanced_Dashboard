@@ -284,7 +284,7 @@ if uploaded_file:
                                     va='center',
                                     fontsize=fail_size,
                                     fontweight='bold',
-                                    color='red'
+                                    color='black'
                                 )
 
                             # PASS label (warna customer, di atas bar PASS)
@@ -297,7 +297,7 @@ if uploaded_file:
                                     va='center',
                                     fontsize=pass_size,
                                     fontweight='bold',
-                                    color='green'
+                                    color=pass_colors.iloc[i]
                                 )
 
                             # TOTAL label (di atas stack)
@@ -312,7 +312,7 @@ if uploaded_file:
                                     va='center',
                                     fontsize=total_size,
                                     fontweight='bold',
-                                    color='blue'
+                                    color='red'
                                 )
                           
                         legend_elements = [
@@ -321,7 +321,7 @@ if uploaded_file:
                         ]
 
                         legend_elements.append(
-                            Patch(facecolor="red", label="FAIL")
+                            Patch(facecolor="black", label="FAIL")
                         )
 
                         ax.legend(handles=legend_elements, title="Index", bbox_to_anchor=(1.02, 1), loc="upper left")
@@ -789,7 +789,6 @@ if uploaded_file:
         with tab4:
             st.subheader("Daily")
             
-
 
 
 
