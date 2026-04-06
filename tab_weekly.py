@@ -319,7 +319,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
             ].copy()
     
             if not df_proj_yield.empty:
-                projects = df_proj_yield["Project"].uniques()
+                projects = df_proj_yield["Project"].unique()
                 yield_data = []
 
                 for proj in projects:
