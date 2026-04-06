@@ -307,5 +307,81 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
             else:
                 st.info("No fail found (all counts are 0) for teh selected range.")
 
+        ########################################################
+
+        st.markdown("---")
+        st.subheader("Weekly Project Yield Performance")
+
+        if df_qty_weekly is not None:
+            df_proj_yield = df_qty_weekly[
+                (df_qty_weekly["Customer"] == customer_week) &
+                (df_qty_weekly["Station"] == station_week) 
+            ].copy()
+    
+            if not df_proj_yield.empty:
+                projects = df_proj_yield["Project"].uniques()
+                yield_data = []
+
+                for proj in projects:
+                    proj_data = df_proj_yield[df_proj_yield["Project"] == proj]
+
+                    qty_in = proj_data[proj_data["QTYWeek"] == "QTY IN"][selected_weeks].sum(axis=1).sum()
+                    qty_pass = proj_data[proj_data["QTYWeek"] == "QTY PASS"][selected_weeks].sum(axis=1).sum()
+
+                    yield_val = (qty_pass / qty_in * 100) if qty_in > 0 else 0 
+
+                    yield_data.append({
+                        "Project": proj.replace(".xlsx", ""),
+                        "Yield": yield_val
+                    })
+
+                    df_yield_plot = pd.DataFrame(yield_data)
+
+                    df_yield_plot = df_yield_plot.sort_values("Project", ascending=True)
+
+                    n_bars_proj = len(df_yield_plot) 
+                    fig3, ax3 = plt.subplots(figsize=(14,6))
+                    unique_projs =df_yield_plot["Project"].unique()
+                    colors_proj = plt.cmplt.cm.tab20(range(len(unique_projs)))
+                    color_map_proj = {
+                        proj : colors_pro[i%20]
+                        for i, proj in enumerate(unique_projs)
+                    }
+                    bar_colors_proj = df_yield_plot["Project"].map(color_map_proj)
+
+                    ax3.barh(
+                        df_yield_plot["Project"],
+                        df_yield_plot["Yield"],
+                        color=bar_colors_proj
+                    )
+
+                    for i, value in enumerate(df_yield_plot["Yield"]):
+                        ax3.text(
+                            value + 1, 
+                            i, 
+                            f"{round(value, 2)}%", 
+                            ha="left", va="center",
+                            fontsize = 10, fontweight="bold", color="black"
+                        )
+
+                    ax3.set_xlabel("Yield (%)", fontsize=12)
+                    ax3.set_title(
+                        f"{station_week} - Project Yield Performance ({week_start} - {week_end})",
+                        fontsize=14, fontweight="bold"
+                    )
+
+                    ax3.set_xlim(0, 115)
+                    ax3.invert_yaxis()
+                    plt.tight_layout()
+                    st.pyplot(fig3)
+
+                else:
+                    st.info("No project data available for the selected station.")
+                
+                    
+
+    
+
+     
     else:
         st.warning("No weekly data available.")
