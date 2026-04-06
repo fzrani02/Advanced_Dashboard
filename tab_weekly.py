@@ -108,7 +108,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 y_labels, 
                 pass_values,
                 left=fail_values,
-                color="salmon", 
+                color="gold", 
                 label="QTY PASS"
             )
 
