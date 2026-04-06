@@ -137,7 +137,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                         i, 
                         int(fail_val),
                         ha='left', va='center',
-                        fontsize=fail_size, fontweight='bold', color='black'
+                        fontsize=fail_size, fontweight='bold', color='red'
                     )
 
                 # LABEL PASS
