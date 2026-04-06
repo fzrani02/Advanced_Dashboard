@@ -75,7 +75,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
     df_plot = df_plot.sort_values('Week_Cat').reset_index(drop=True)
 
     if not df_plot.empty:
-        fig, ax3 = plt.subplots(figsize=(14, 6))
+        fig, ax = plt.subplots(figsize=(14, 6))
 
         bar_colors = [plt.cm.tab20(i % 20) for i in range(len(df_plot))]
 
