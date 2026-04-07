@@ -18,7 +18,7 @@ def run_processing(uploaded_file):
 def generate_excel_report(customer, month, df_st_yield, buf_fail, buf_proj_yield, dict_proj_tables):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-    worksheet = workbook.add_worksheet("Project_Detail_Report")
+    worksheet = workbook.add_worksheet("Monthly_Report")
 
     title_format = workbook.add_format({'bold': True, 'font_size': 14})
     header_format = workbook.add_format({'bold': True, 'bg_color': '#D3D3D3', 'border':1})
