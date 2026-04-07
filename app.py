@@ -108,6 +108,78 @@ def generate_excel_report(customer, month, df_st_yield, buf_fail, buf_proj_yield
         
     workbook.close()
     return output.getvalue()
+
+def generate_weekly_excel_report(customer, station, week_start, week_end, buf_yield, buf_fail, buf_proj_yield, dict_proj_tables):
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    
+    # Membuat 2 Sheet agar Weekly Report ada di Sheet 2 sesuai request
+    worksheet1 = workbook.add_worksheet("Summary_Info") # Sheet 1
+    worksheet = workbook.add_worksheet("Weekly_Report") # Sheet 2
+
+    title_format = workbook.add_format({'bold': True, 'font_size': 14})
+    header_format = workbook.add_format({'bold': True, 'bg_color': '#D3D3D3', 'border':1})
+    cell_format = workbook.add_format({'border':1})
+    
+    worksheet1.write('A1', 'This file contains the Weekly Report on Sheet 2', title_format)
+
+    # JUDUL DI SHEET 2
+    worksheet.write('A1', f'Weekly Station Report ({customer} | {station} | {week_start}-{week_end})', title_format)
+
+    def resize_img(buffer, width, height):
+        buffer.seek(0)
+        img = Image.open(buffer)
+        img_resized = img.resize((width, height))
+        new_buffer = io.BytesIO()
+        img_resized.save(new_buffer, format ='PNG')
+        new_buffer.seek(0)
+        return new_buffer
+
+    # Insert Plots
+    if buf_yield:
+        worksheet.insert_image('A3', '', {'image_data': resize_img(buf_yield, 700, 300), 'x_scale': 0.8, 'y_scale':0.8})
+    if buf_fail:
+        worksheet.insert_image('L3', '', {'image_data': resize_img(buf_fail, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
+    if buf_proj_yield:
+        worksheet.insert_image('A18', '', {'image_data': resize_img(buf_proj_yield, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
+
+    # Tabel Detail Project
+    row = 32
+    col = 0
+
+    for proj, tables in dict_proj_tables.items():
+        worksheet.write(row, col, f"Project: {proj}", title_format)
+        row += 2
+
+        qty_df = tables.get('qty')
+        if qty_df is not None and not qty_df.empty:
+            worksheet.write(row, col, "Quantity & Yield", workbook.add_format({'bold': True}))
+            row +=1
+            for c_idx, col_name in enumerate(qty_df.columns):
+                worksheet.write(row, col +c_idx, str(col_name), header_format)
+            row += 1
+            for _, r_data in qty_df.iterrows():
+                for c_idx, val in enumerate (r_data):
+                    worksheet.write(row, col + c_idx, val, cell_format)
+                row += 1
+            row += 1
+
+        fail_df = tables.get('fail')
+        if fail_df is not None and not fail_df.empty:
+            worksheet.write(row, col, "Top Fail Mode", workbook.add_format({'bold': True}))
+            row += 1
+            for c_idx, col_name in enumerate(fail_df.columns):
+                worksheet.write(row, col + c_idx, str(col_name), header_format)
+            row += 1
+            for _, r_data in fail_df.iterrows():
+                for c_idx, val in enumerate(r_data):
+                    worksheet.write(row, col + c_idx, val, cell_format)
+                row += 1
+            row += 2
+
+    workbook.close()
+    return output.getvalue()
+    
     
 st.set_page_config(layout="wide")
 
@@ -779,11 +851,34 @@ if uploaded_file:
                 
         with tab3:
             if df_qty_weekly is not None and not df_qty_weekly.empty:
-                render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly)
+                res = render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly)
 
+                if res is not None:
+                    buf_y, buf_f, buf_py, cust_w, st_w, w_start, w_end, dict_proj_w =  res
+
+                    st.markdown("----")
+                    try:
+                        excel_data_weekly = generate_weekly_excel_report(
+                            customer=cust_w,
+                            station=st_w,
+                            week_start=w_start,
+                            week_end=w_end,
+                            buf_yield=buf_y,
+                            buf_fail=buf_f,
+                            buf_proj_yield=buf_py,
+                            dict_proj_tables=dict_proj_w
+                        )
+        
+                        st.download_button(
+                            label = "📥 Download Weekly Project Report",
+                            data = excel_data_weekly,
+                            file_name= f"Weekly_Report_{cust_w}_{st_w}_{w_start}-{w_end}.xlsx",
+                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        )
+                    except Exception as e:
+                        st.warning(f"Unable to create report. Error: {e}")
             else:
                 st.warning("No weekly data available.")
-
             
 ################################################################################################################
         with tab4:
