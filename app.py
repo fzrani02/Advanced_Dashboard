@@ -213,39 +213,39 @@ def generate_weekly_excel_report(
     if buf_fail:
         worksheet2.insert_image('L3', '', {'image_data': resize_img(buf_fail, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
     if buf_proj_yield:
-        worksheet.insert_image('A18', '', {'image_data': resize_img(buf_proj_yield, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
+        worksheet2.insert_image('A18', '', {'image_data': resize_img(buf_proj_yield, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
 
     # Tabel Detail Project Monthly
     row = 32
     col = 0
 
     for proj, tables in dict_proj_tables.items():
-        worksheet.write(row, col, f"Project: {proj}", title_format)
+        worksheet2.write(row, col, f"Project: {proj}", title_format)
         row += 2
 
         qty_df = tables.get('qty')
         if qty_df is not None and not qty_df.empty:
-            worksheet.write(row, col, "Quantity & Yield", workbook.add_format({'bold': True}))
+            worksheet2.write(row, col, "Quantity & Yield", workbook.add_format({'bold': True}))
             row +=1
             for c_idx, col_name in enumerate(qty_df.columns):
-                worksheet.write(row, col +c_idx, str(col_name), header_format)
+                worksheet2.write(row, col +c_idx, str(col_name), header_format)
             row += 1
             for _, r_data in qty_df.iterrows():
                 for c_idx, val in enumerate (r_data):
-                    worksheet.write(row, col + c_idx, val, cell_format)
+                    worksheet2.write(row, col + c_idx, val, cell_format)
                 row += 1
             row += 1
 
         fail_df = tables.get('fail')
         if fail_df is not None and not fail_df.empty:
-            worksheet.write(row, col, "Top Fail Mode", workbook.add_format({'bold': True}))
+            worksheet2.write(row, col, "Top Fail Mode", workbook.add_format({'bold': True}))
             row += 1
             for c_idx, col_name in enumerate(fail_df.columns):
-                worksheet.write(row, col + c_idx, str(col_name), header_format)
+                worksheet2.write(row, col + c_idx, str(col_name), header_format)
             row += 1
             for _, r_data in fail_df.iterrows():
                 for c_idx, val in enumerate(r_data):
-                    worksheet.write(row, col + c_idx, val, cell_format)
+                    worksheet2.write(row, col + c_idx, val, cell_format)
                 row += 1
             row += 2
 
