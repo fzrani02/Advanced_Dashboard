@@ -444,6 +444,3 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
     if 'buf_proj_yield_week' not in locals(): buf_proj_yield_week = None
 
     return buf_yield_week, buf_fail_week, buf_proj_yield_week, customer_week, station_week, week_start, week_end, dict_proj_tables_weekly
-
-else:
-    st.warning("No weekly data available.")
