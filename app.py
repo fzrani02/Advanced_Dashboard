@@ -109,23 +109,17 @@ def generate_excel_report(customer, month, df_st_yield, buf_fail, buf_proj_yield
     workbook.close()
     return output.getvalue()
 
-def generate_weekly_excel_report(customer, station, week_start, week_end, buf_yield, buf_fail, buf_proj_yield, dict_proj_tables):
+def generate_weekly_excel_report(
+    customer, station, week_start, week_end, buf_yield, buf_fail, buf_proj_yield, dict_proj_tables,
+    m_customer=None, m_month=None, m_df_st=None, m_buf_fail=None, m_buf_fail=None, m_buf_proj=None, m_dict_proj=None
+):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
-    
-    # Membuat 2 Sheet agar Weekly Report ada di Sheet 2 sesuai request
-    worksheet1 = workbook.add_worksheet("Summary_Info") # Sheet 1
-    worksheet = workbook.add_worksheet("Weekly_Report") # Sheet 2
 
-    title_format = workbook.add_format({'bold': True, 'font_size': 14})
+    title_format = workbook.add_format({'bold':True, 'font_size': 14})
     header_format = workbook.add_format({'bold': True, 'bg_color': '#D3D3D3', 'border':1})
     cell_format = workbook.add_format({'border':1})
     
-    worksheet1.write('A1', 'This file contains the Weekly Report on Sheet 2', title_format)
-
-    # JUDUL DI SHEET 2
-    worksheet.write('A1', f'Weekly Station Report ({customer} | {station} | {week_start}-{week_end})', title_format)
-
     def resize_img(buffer, width, height):
         buffer.seek(0)
         img = Image.open(buffer)
@@ -135,15 +129,93 @@ def generate_weekly_excel_report(customer, station, week_start, week_end, buf_yi
         new_buffer.seek(0)
         return new_buffer
 
+    # ==========================
+    # SHEET 1 : MONTHLY REPORT
+    # ==========================
+    worksheet1 = workbook.add_worksheet("Monthly_Report")
+ 
+    # Cek apakah data bulanan (dari Tab 2) ada isinya / sudah dipilih user
+    if m_df_st is not None and not m_df_st.empty and m_customer and m_month:
+        worksheet1.write('A1', f'Monthly Station Report ({m_customer}-{m_month})', title_format)
+        
+        # Recreate Plot Yield Bulanan supaya bisa diekstrak
+        fig_st, ax_st = plt.subplots(figsize=(10,5))
+        df_st = m_df_st.copy()
+        unique_custs = df_st["Customer"].unique()
+        colors_st = plt.cm.tab20(range(len(unique_custs)))
+        c_map = {c: colors_st[i] for i, c in enumerate(unique_custs)}
+        b_colors = df_st["Customer"].map(c_map)
+
+        ax_st.barh(df_st["Station_Label"], df_st["TOTAL YIELD (%)"], color=b_colors)
+        for i, v in enumerate(df_st["TOTAL YIELD (%)"]):
+            ax_st.text(v + 1, i, round(v,2), va='center', fontsize=8)
+        ax_st.set_xlabel("Total Yield (%)")
+        ax_st.set_title(f"Total Yield (%) per Station - {m_month}")
+        ax_st.set_xlim(0,115)
+        plt.tight_layout()
+
+        buf_yield_station = io.BytesIO()
+        fig_st.savefig(buf_yield_station, format='png', bbox_inches='tight')
+        plt.close(fig_st)
+
+        # Insert Gambar Bulanan
+        worksheet1.insert_image('A3', '', {'image_data': buf_yield_station, 'x_scale': 0.5, 'y_scale':0.5})
+        if m_buf_fail:
+            worksheet1.insert_image('J3', '', {'image_data': resize_img(m_buf_fail, 526, 281), 'x_scale': 0.4, 'y_scale': 0.4})
+        if m_buf_proj:
+            worksheet1.insert_image('A16', '', {'image_data': resize_img(m_buf_proj, 596, 284), 'x_scale': 0.4, 'y_scale': 0.4})
+
+        # Tabel Detail Project Bulanan
+        row = 28
+        col = 0
+        if m_dict_proj:
+            for proj, tables in m_dict_proj.items():
+                worksheet1.write(row, col, f"Project: {proj}", title_format)
+                row += 2
+                qty_df = tables.get('qty')
+                if qty_df is not None and not qty_df.empty:
+                    worksheet1.write(row, col, "Quantity & Yield", workbook.add_format({'bold': True}))
+                    row +=1
+                    for c_idx, col_name in enumerate(qty_df.columns):
+                        worksheet1.write(row, col +c_idx, str(col_name), header_format)
+                    row += 1
+                    for _, r_data in qty_df.iterrows():
+                        for c_idx, val in enumerate (r_data):
+                            worksheet1.write(row, col + c_idx, val, cell_format)
+                        row += 1
+                    row += 1
+
+                fail_df = tables.get('fail')
+                if fail_df is not None and not fail_df.empty:
+                    worksheet1.write(row, col, "Top 5 Fail Mode", workbook.add_format({'bold': True}))
+                    row += 1
+                    for c_idx, col_name in enumerate(fail_df.columns):
+                        worksheet1.write(row, col + c_idx, str(col_name), header_format)
+                    row += 1
+                    for _, r_data in fail_df.iterrows():
+                        for c_idx, val in enumerate(r_data):
+                            worksheet1.write(row, col + c_idx, val, cell_format)
+                        row += 1
+                    row += 2
+    else:
+        # Jika user belum filter data bulanan
+        worksheet1.write('A1', 'monthly data not selected', title_format)
+        
+    # ==========================
+    # SHEET 2 : WEEKLY REPORT
+    # ==========================
+    worksheet2 = workbook.add_worksheet("Weekly_Report")
+    worksheet2.write('A1', f'Weekly Station Report ({customer} | {station} | {week_start}-{week_end})', title_format)
+
     # Insert Plots
     if buf_yield:
-        worksheet.insert_image('A3', '', {'image_data': resize_img(buf_yield, 700, 300), 'x_scale': 0.8, 'y_scale':0.8})
+        worksheet2.insert_image('A3', '', {'image_data': resize_img(buf_yield, 700, 300), 'x_scale': 0.8, 'y_scale':0.8})
     if buf_fail:
-        worksheet.insert_image('L3', '', {'image_data': resize_img(buf_fail, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
+        worksheet2.insert_image('L3', '', {'image_data': resize_img(buf_fail, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
     if buf_proj_yield:
         worksheet.insert_image('A18', '', {'image_data': resize_img(buf_proj_yield, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
 
-    # Tabel Detail Project
+    # Tabel Detail Project Monthly
     row = 32
     col = 0
 
@@ -856,9 +928,17 @@ if uploaded_file:
                 if res is not None:
                     buf_y, buf_f, buf_py, cust_w, st_w, w_start, w_end, dict_proj_w =  res
 
+                    m_cust = customers[0] if ('customers' in locals() and len(customers) > 0) else None
+                    m_mon = month if 'month' in locals() else None 
+                    m_df = df_filtered if 'df_filtered' in locals () else None
+                    m_bfail = buf_fail if 'buf_fail' in locals () else None
+                    m_bproj = buf_yield_proj if 'buf_yield_proj' in locals () else None
+                    m_dict = dict_proj_tables if 'dict_proj_tables' in locals () else None
+
                     st.markdown("----")
                     try:
                         excel_data_weekly = generate_weekly_excel_report(
+                            # WEEKLY
                             customer=cust_w,
                             station=st_w,
                             week_start=w_start,
@@ -866,7 +946,14 @@ if uploaded_file:
                             buf_yield=buf_y,
                             buf_fail=buf_f,
                             buf_proj_yield=buf_py,
-                            dict_proj_tables=dict_proj_w
+                            dict_proj_tables=dict_proj_w,
+                            # MONTHLY
+                            m_customer=m_cust,
+                            m_month=m_mon, 
+                            m_df_st=m_df, 
+                            m_buf_fail=m_bfail, 
+                            m_buf_proj=m_bproj,
+                            m_dict_proj=m_dict
                         )
         
                         st.download_button(
