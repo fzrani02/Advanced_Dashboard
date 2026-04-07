@@ -445,5 +445,5 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
 
     return buf_yield_week, buf_fail_week, buf_proj_yield_week, customer_week, station_week, week_start, week_end, dict_proj_tables_weekly
 
-    else:
-        st.warning("No weekly data available.")
+else:
+    st.warning("No weekly data available.")
