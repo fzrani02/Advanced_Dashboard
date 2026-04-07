@@ -382,10 +382,10 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
         cols = st.columns(3)
         dict_proj_tables_weekly = {}
 
-        projects_list = df_qty_weekly[
+        project_list = df_qty_weekly[
             (df_qty_weekly["Customer"] == customer_week) &
             (df_qty_weekly["Station"] == station_week) 
-        ].["Project"].dropna().unique()
+        ]["Project"].dropna().unique()
 
         for i, project in enumerate(sorted(project_list)):
             project_display = project.replace(".xlsx", "")
@@ -403,7 +403,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                     df_project_qty_display = pd.DataFrame()
                     if not df_project_qty.empty:
                         cols_to_show = ["QTYWeek"] + selected_weeks
-                        avail_cols = [c for c in cols_to_show if c in df_project_qty.colums]
+                        avail_cols = [c for c in cols_to_show if c in df_project_qty.columns]
                         df_project_qty_display = df_project_qty[avail_cols]
 
                         st.write("Quantity & Yield")
@@ -413,7 +413,15 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                         st.info("No quantity data.")
 
                     # 2. Fail Table
+                    df_project_fail = df_fail_weekly[
+                        (df_fail_weekly["Customer"] == customer_week) &
+                        (df_fail_weekly["Station"] == station_week) &
+                        (df_fail_weekly["Project"] == project) &
+                        (df_fail_weekly["Week"].isin(selected_weeks))
+                    ].copy()
+                    
                     df_project_fail_display = pd.DataFrame()
+                    
                     if not df_project_fail.empty:
                         df_project_fail_display = (
                             df_project_fail.groupby("Top 5 Fail Mode", as_index=False)["Count"].sum()
@@ -431,21 +439,11 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                             'fail': df_project_fail_display
                         }
 
-                    if 'buf_yield_week' not in locals(): buf_yield_week = None 
-                    if 'buf_fail_week' not in locals(): buf_fail_week = None
-                    if 'buf_proj_yield_week' not in locals(): buf_proj_yield_week = None
+    if 'buf_yield_week' not in locals(): buf_yield_week = None 
+    if 'buf_fail_week' not in locals(): buf_fail_week = None
+    if 'buf_proj_yield_week' not in locals(): buf_proj_yield_week = None
 
-                    return buf_yield_week, buf_fail_week, buf_proj_yield_week, customer_week, station_week, week_start, week_end, dict_proj_tables_weekly
+    return buf_yield_week, buf_fail_week, buf_proj_yield_week, customer_week, station_week, week_start, week_end, dict_proj_tables_weekly
 
-                    
-
-    
-    
-                
-                    
-
-    
-
-     
     else:
         st.warning("No weekly data available.")
