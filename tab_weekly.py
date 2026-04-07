@@ -364,7 +364,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
         # =============================================
 
         st.markdown("----")
-        st.markdown("#### Project Details")
+        st.markdown("#### Weekly Project Details")
         st.caption("Click on a project below to insert in report")
 
     
