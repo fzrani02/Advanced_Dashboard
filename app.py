@@ -209,11 +209,11 @@ def generate_weekly_excel_report(
 
     # Insert Plots
     if buf_yield:
-        worksheet2.insert_image('A3', '', {'image_data': resize_img(buf_yield, 700, 300), 'x_scale': 0.8, 'y_scale':0.8})
+        worksheet2.insert_image('A3', '', {'image_data': buf_yield, 'x_scale': 0.5, 'y_scale':0.5})
     if buf_fail:
-        worksheet2.insert_image('L3', '', {'image_data': resize_img(buf_fail, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
+        worksheet2.insert_image('J3', '', {'image_data': buf_fail, 'x_scale': 0.4, 'y_scale': 0.4})
     if buf_proj_yield:
-        worksheet2.insert_image('A18', '', {'image_data': resize_img(buf_proj_yield, 700, 300), 'x_scale': 0.8, 'y_scale': 0.8})
+        worksheet2.insert_image('A16', '', {'image_data': buf_proj_yield, 'x_scale': 0.4, 'y_scale': 0.4})
 
     # Tabel Detail Project Monthly
     row = 32
