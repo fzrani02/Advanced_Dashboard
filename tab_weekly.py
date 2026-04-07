@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
+import io
 
 def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
     st.subheader("Quantity and Yield per Week")
@@ -190,6 +191,9 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
         plt.tight_layout()
         st.pyplot(fig)
 
+        buf_yield_week = io.BytesIO()
+        fig.savefig(buf_yield_week, format="png", bbox_inches="tight")
+        plt.close(fig)
 
         ##################################
 
@@ -285,6 +289,10 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 plt.tight_layout()
                 st.pyplot(fig2)
 
+                buf_fail_week = io.BytesIO()
+                fig2.savefig(buf_fail_week, format="png", bbox_inches="tight")
+                plt.close(fig2)
+
             else:
                 st.info("No fail found (all counts are 0) for teh selected range.")
 
@@ -356,6 +364,10 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 plt.tight_layout()
                 st.pyplot(fig3)
 
+                buf_proj_yield_week = io.BytesIO()
+                fig3.savefig(buf_proj_yield_week, format="png", bbox_inches="tight")
+                plt.close(fig3)
+
         else:
             st.info("No project data available for the selected station.")
 
@@ -366,6 +378,66 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
         st.markdown("----")
         st.markdown("#### Weekly Project Details")
         st.caption("Click on a project below to insert in report")
+
+        cols = st.columns(3)
+        dict_proj_tables_weekly = {}
+
+        projects_list = df_qty_weekly[
+            (df_qty_weekly["Customer"] == customer_week) &
+            (df_qty_weekly["Station"] == station_week) 
+        ].["Project"].dropna().unique()
+
+        for i, project in enumerate(sorted(project_list)):
+            project_display = project.replace(".xlsx", "")
+            with cols[i % 3]:
+                with st.expander(f" 📌 Project: {project_display}", expanded=False):
+                    include_in_report = st.checkbox(f"Include in Report", key=f"chk_w_{project}")
+
+                    # 1. QTY Table 
+                    df_project_qty = df_qty_weekly[
+                        (df_qty_weekly["Customer"] == customer_week) &
+                        (df_qty_weekly["Station"] == station_week) &
+                        (df_qty_weekly["Project"] == project)
+                    ].copy()
+
+                    df_project_qty_display = pd.DataFrame()
+                    if not df_project_qty.empty:
+                        cols_to_show = ["QTYWeek"] + selected_weeks
+                        avail_cols = [c for c in cols_to_show if c in df_project_qty.colums]
+                        df_project_qty_display = df_project_qty[avail_cols]
+
+                        st.write("Quantity & Yield")
+                        st.dataframe(df_project_qty_display, use_container_width=False, hide_index=True)
+
+                    else:
+                        st.info("No quantity data.")
+
+                    # 2. Fail Table
+                    df_project_fail_display = pd.DataFrame()
+                    if not df_project_fail.empty:
+                        df_project_fail_display = (
+                            df_project_fail.groupby("Top 5 Fail Mode", as_index=False)["Count"].sum()
+                        ).sort_values("Count", ascending=False)
+
+                        st.write("Top Fail Mode")
+                        st.dataframe(df_project_fail_display, use_container_width=False, hide_index=True)
+                    else:
+                        st.info("No fail data.")
+                        
+                    # 3. Simpan ke Dictionary kalau di ceklis
+                    if include_in_report:
+                        dict_proj_tables_weekly[project_display] = {
+                            'qty': df_project_qty_display,
+                            'fail': df_project_fail_display
+                        }
+
+                    if 'buf_yield_week' not in locals(): buf_yield_week = None 
+                    if 'buf_fail_week' not in locals(): buf_fail_week = None
+                    if 'buf_proj_yield_week' not in locals(): buf_proj_yield_week = None
+
+                    return buf_yield_week, buf_fail_week, buf_proj_yield_week, customer_week, station_week, week_start, week_end, dict_proj_tables_weekly
+
+                    
 
     
     
