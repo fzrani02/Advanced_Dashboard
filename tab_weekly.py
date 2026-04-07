@@ -84,18 +84,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
             fail_values = df_plot["TOTAL QTY FAIL"]
             total_values = df_plot["TOTAL QTY IN"]
             y_labels = df_plot["Week"]
-
-            #unique_projects = df_plot["Project"].unique()
-
-            #colors = plt.cm.tab20c(range(len(unique_projects)))
-
-            #color_map_project = {
-                #proj: colors[i]
-                #for i, proj in enumerate(unique_projects)
-            #}
-
-            #pass_colors = df_plot["Project"].map(color_map_project)
-
+            
             ax.barh(
                 y_labels,
                 #df_plot["Project"],
@@ -175,12 +164,6 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
         else:
             y_labels = df_plot["Week"]
             yield_values = df_plot["TOTAL YIELD (%)"]
-
-            
-
-            ###
-            #colors = plt.cm.tab20c(range(len(df_plot)))
-            #df_plot["YIELD"] = (df_plot["PASS"] / df_plot["IN"]) * 100
 
             ax.barh(
                 y_labels, 
@@ -374,7 +357,18 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 st.pyplot(fig3)
 
         else:
-                    st.info("No project data available for the selected station.")
+            st.info("No project data available for the selected station.")
+
+        # =============================================
+        # Render Each Project 
+        # =============================================
+
+        st.markdown("----")
+        st.markdown("#### Project Details")
+        st.caption("Click on a project below to insert in report")
+
+    
+    
                 
                     
 
