@@ -111,7 +111,7 @@ def generate_excel_report(customer, month, df_st_yield, buf_fail, buf_proj_yield
 
 def generate_weekly_excel_report(
     customer, station, week_start, week_end, buf_yield, buf_fail, buf_proj_yield, dict_proj_tables,
-    m_customer=None, m_month=None, m_df_st=None, m_buf_fail=None, m_buf_fail=None, m_buf_proj=None, m_dict_proj=None
+    m_customer=None, m_month=None, m_df_st=None, m_buf_fail=None, m_buf_proj=None, m_dict_proj=None
 ):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
