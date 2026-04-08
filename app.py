@@ -1,6 +1,6 @@
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import FPatch
+from matplotlib.patches import Patch
 
 import pandas as pd
 import streamlit as st
