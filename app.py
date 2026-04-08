@@ -1,6 +1,6 @@
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import Patch
+from matplotlib.patches import FPatch
 
 import pandas as pd
 import streamlit as st
@@ -268,7 +268,7 @@ st.sidebar.caption("Example: RTY > ABB > FCT > AB_010.xlsx")
 if uploaded_file:
 
     with st.spinner("Processing file..."):
-        df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, excel_buffer = run_processing(uploaded_file)
+        df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer = run_processing(uploaded_file)
 
     if df_qty is not None:
 
@@ -306,8 +306,24 @@ if uploaded_file:
             st.header("Daily Integrated Data")
             
             st.markdown("#### Quantity and Yield per Day")
+            if df_qty_daily is not None and not df_qty_daily.empty:
+                st.dataframe(df_qty_daily, use_container_width=True)
+
+            else:
+                st.info("No daily quantity data available.")
+            
             st.markdown("#### Top 5 Fail Mode per Day")
+            if df_fail_daily is not None and not df_fail_daily.empty:
+                st.dataframe(df_fail_daily, use_container_width=True)
+
+            else:
+                st.info("No daily fail mode data available.")
+            
             st.markdown("#### Daily Detail")
+            if df_daily_detail is not None and not df_daily_detail.empty:
+                st.dataframe(df_daily_detail, use_container_width=True)
+            else:
+                st.info("No daily detail data available.")
 
             st.markdown("----")
 
