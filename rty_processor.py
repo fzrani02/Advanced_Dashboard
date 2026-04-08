@@ -411,7 +411,7 @@ def process_rty_7z(uploaded_file):
                     ##########
 
         if not all_data:
-            return None, None, None, None, None, None, None
+            return None, None, None, None, None, None, None, None, None, None
 
         final_df = pd.concat(all_data, ignore_index=True)
         top5_df = pd.DataFrame(all_top5_data)
@@ -468,7 +468,7 @@ def process_rty_7z(uploaded_file):
 
         # DAILY 
         if not daily_detail_df.empty:
-            daily_detail_df:(
+            daily_detail_df = (
                 daily_detail_df
                 .groupby(["Customer", "Station", "Day"], as_index=False)
                 .agg({
@@ -495,6 +495,9 @@ def process_rty_7z(uploaded_file):
             weekly_top5_df.to_excel(writer, sheet_name="Top5FailMode_Weekly", index=False)
             weekly_detail_df.to_excel(writer, sheet_name="WeeklyDetail", index=False)
 
+            if not daily_qty_df.empty: daily_qty_df.to_excel(writer, sheet_name="QTY_Daily", index=False)
+            if not daily_top5_df.empty: daily_top5_df.to_excel(writer, sheet_name = "Top5FailMode_Daily", index = False)
+            if not daily_detail_df.empty: daily_detail_df.to_excel(writer, sheet_name="DailyDetail", index=False)
 
         output_buffer.seek(0)
 
