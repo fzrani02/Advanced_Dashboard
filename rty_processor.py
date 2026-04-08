@@ -41,6 +41,12 @@ def process_rty_7z(uploaded_file):
     weekly_top5_data = []
     weekly_detail_data = []
 
+    ####  DAILY #######
+    daily_data = []
+    daily_top5_data = []
+    daily_detail_data = []
+    
+
     months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
     weeks = [f"WW{str(i).zfill(2)}" for i in range(1,53)]
   
@@ -109,7 +115,6 @@ def process_rty_7z(uploaded_file):
                             nrows=4       # QTY IN, PASS, FAIL, YIELD
                         )
                         
-    
                         df_week.columns = df_week.columns.str.strip()
     
                         df_week.rename(columns={
@@ -155,7 +160,114 @@ def process_rty_7z(uploaded_file):
                         df_week["Project"] = filename
     
                         weekly_data.append(df_week)
-    
+
+                        # ==============================
+                        # DAILY DATA
+                        # ==============================
+                        try:
+                            # 1. Ekstrak QTY & Yield
+                            df_day = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4)
+                            df_day.columns = df_day.columns.str.strip()
+                            df_day.rename(columns={df_day.columns[0]: "QTYDay"}, inplace=True)
+
+                            if "QTYDay" not in df_day.columns:
+                                df_day.insert(0, "QTYDay", ["QTY IN", "QTY PASS", "QTY FAIL", "YIELD"][:len(df_day)])
+
+                            # Format kolom date
+                            day_cols_formatted = []
+                            for c in df_day.columns[1:]:
+                                if isinstance(c, pd.Timestamp) or isinstance(c, pd.DatetimeIndex):
+                                    day_cols_formatted.append(f"{c.day}-{c.strftime('%b-%y')}")
+                                else:
+                                    day_cols_formatted.append(str(c))
+
+                            df_day.columns = ["QTYDay"] + day_cols_formatted
+                            day_cols = [c for c in df_day.columns[1:] if not c.startswith("Unnamed")]
+                            df_day = df_day[["QTYDay"] + day_cols]
+
+                            df_day[day_cols] = df_day[day_cols].apply(pd.to_numeric, errors="coerce").fillna(0)
+
+                            result_day = (
+                                df_day.loc[1, day_cols]/
+                                df_day.loc[0, day_cols].replace(0, pd.NA)
+                            ) * 100
+                            df_day.loc[3, day_cols] = result_day.fillna(0).round(2)
+
+                            df_day["Customer"] = customer
+                            df_day["Station"] = station
+                            df_day["Project"] = filename
+                            daily_data.append(df_day)
+
+                            # 2. Daily Detail
+                            for day in day_cols:
+                                qty_in = pd.to_numeric(df_day.loc[0, day], errors="coerce")
+                                qty_pass = pd.to_numeric(df_day.loc[1, day], errors="coerce")
+                                qty_fail = pd.to_numeric(df_day.loc[2, day], errors="coerce")
+
+                                yield_value = 0
+                                if pd.notna(qty_in) and qty_in != 0:
+                                    yield_value = round((qty_pass/qty_in)*100, 2)
+
+                                daily_detail_data.append({
+                                    "Customer": customer,
+                                    "Station": station,
+                                    "Day": day,
+                                    "TOTAL QTY IN": qty_in if pd.notna(qty_in) else 0,
+                                    "TOTAL QTY PASS": qty_pass if pd.notna(qty_pass) else 0,
+                                    "TOTAL QTY FAIL": qty_fail if pd.notna(qty_fail) else 0,
+                                    "TOTAL YIELD (%)": yield_value
+                                })
+
+                            # 3. Daily Fail Mode
+                            df_fail_day = pd.read_excel(xls, sheet_name=1, skiprows=7, nrows=793)
+                            df_fail_day.rename(columns={df_fail_day.columns[0]: "FailMode"}, inplace=True)
+                            df_fail_day = df_fail_day[df_fail_day["FailMode"].notna()]
+
+                            fail_day_formatted = []
+                            for c in df_fail_day.columns:
+                                if isinstance(c, pd.Timestamp) or isinstance(c, pd.DatetimeIndex):
+                                    fail_day_formatted.append(f"{c.day}-{c.strftime('%b-%y')}")
+                                else:
+                                    fail_day_formatted.append(str(c))
+                            df_fail_day.columns = fail_day_formatted
+
+                            available_days_fail = [d for d in day_cols if d in df_fail_day.columns]
+                            df_fail_day[available_days_fail] = df_fail_day[available_days_fail].astype(float).fillna(0)
+
+                            for day in available_days_fail:
+                                valid_fail = df_fail_day[df_fail_day[day] > 0]
+                                rows_added = 0
+
+                                if len(valid_fail) > 0:
+                                    top5 = valid_fail.nlargest(5, day)
+                                    for _, row_fail in top5.iterrows():
+                                        daily_top5_data.append({
+                                            **base_info,
+                                            "Day": day,
+                                            "Top 5 Fail Mode": row_fail["FailMode"],
+                                            "Count": int(row_fail[day])
+                                        })
+                                        rows_added += 1
+
+                                    while rows_added < 5:
+                                        daily_top5_data.append({
+                                            **base_info,
+                                            "Day": day,
+                                            "Top 5 Fail Mode": "Not Available",
+                                            "Count": 0
+                                        })
+                                        rows_added += 1
+                                else:
+                                    for _ in range(5):
+                                        daily_top5_data.append({
+                                            **base_info,
+                                            "Day": day,
+                                            "Top 5 Fail Mode": "No Fail Data",
+                                            "Count": 0
+                                        })
+                        except Exception as e:
+                            pass # Skip jika sheet harian gagal dibaca
+
                         # ==============================
                         # MONTHLY DETAIL
                         # ==============================
@@ -309,6 +421,12 @@ def process_rty_7z(uploaded_file):
         weekly_top5_df = pd.DataFrame(weekly_top5_data)
         weekly_detail_df = pd.DataFrame(weekly_detail_data)
 
+        ### DAILY 
+
+        daily_qty_df = pd.concat(daily_data, ignore_index=True) if daily_data else pd.DataFrame()
+        daily_top5_df = pd.DataFrame(daily_top5_data)
+        daily_detail_df = pd.DataFrame(daily_detail_data)
+
         ####################
         
 
@@ -348,6 +466,24 @@ def process_rty_7z(uploaded_file):
 
         weekly_detail_df["TOTAL YIELD (%)"] = weekly_detail_df["TOTAL YIELD (%)"].fillna(0).round(2)
 
+        # DAILY 
+        if not daily_detail_df.empty:
+            daily_detail_df:(
+                daily_detail_df
+                .groupby(["Customer", "Station", "Day"], as_index=False)
+                .agg({
+                    "TOTAL QTY IN":"sum", 
+                    "TOTAL QTY PASS": "sum", 
+                    "TOTAL QTY FAIL": "sum"
+                })
+            )
+            daily_detail_df["TOTAL YIELD (%)"] = (
+                daily_detail_df["TOTAL QTY PASS"] / 
+                daily_detail_df["TOTAL QTY IN"].replace(0, pd.NA)
+            ) * 100
+            daily_detail_df["TOTAL YIELD (%)"] = daily_detail_df["TOTAL YIELD (%)"].fillna(0).round(2)
+        
+
         output_buffer = BytesIO()
 
         with pd.ExcelWriter(output_buffer, engine="openpyxl") as writer:
@@ -369,6 +505,9 @@ def process_rty_7z(uploaded_file):
             weekly_qty_df,
             weekly_top5_df,
             weekly_detail_df,
+            daily_qty_df,
+            daily_top5_df,
+            daily_detail_df,
             output_buffer
         )
     
