@@ -258,7 +258,7 @@ st.set_page_config(layout="wide")
 st.sidebar.header("Input Data")
 
 target_month_daily = st.sidebar.selectbox(
-    "Pilih Bulan untuk Data Harian:", 
+    "Select a month for daily data:", 
     ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 )
 
