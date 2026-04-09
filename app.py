@@ -268,11 +268,30 @@ st.sidebar.caption("Example: RTY > ABB > FCT > AB_010.xlsx")
 if uploaded_file:
 
     with st.spinner("Processing file..."):
-        df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer = run_processing(uploaded_file)
+        try:
+            results = run_processing(uploaded_file)
 
-    if df_qty is not None:
+            if results[0] is None:
+                st.warning("Data not available or incorrect data structure.")
+                st.stop()
+            else:
+                (df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer = results
 
-        st.success("Processing Completed")
+        except ValueError as ve:
+            st.error(f"Error Unpacking Variable (the return amount is incorrect): {vel}")
+            st.stop()
+
+        except Exception as e:
+            st.error(f"Fatal Error while processing file: {e}")
+            st.stop()
+
+    ############################################
+        
+        #df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer = run_processing(uploaded_file)
+
+    #if df_qty is not None:
+
+        #st.success("Processing Completed")
 
         tab1, tab2, tab3, tab4 = st.tabs(["Data Overview", "Monthly", "Weekly", "Daily"])
 
