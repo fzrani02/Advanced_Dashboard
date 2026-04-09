@@ -328,7 +328,7 @@ if uploaded_file:
 
             
             st.header("Daily Integrated Data")
-            st.caption(f"Menampilkan data khusus untuk bulan: **{target_month_daily}**")
+            st.caption(f"Specifically display data for: **{target_month_daily}**")
 
             st.markdown("#### Quantity and Yield per Day")
             if df_qty_daily is not None and not df_qty_daily.empty:
