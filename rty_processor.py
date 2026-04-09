@@ -167,9 +167,9 @@ def process_rty_7z(uploaded_file):
                         # ==============================
                         try:
                             # 1. Ekstrak QTY & Yield
-                            df_day = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4)
-                            df_day.dropna(axis=1, how='all', inplace=True)
-                            df_day.columns = df_day.columns.str.strip()
+                            df_day = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4, usecols=list(range(35)))
+                            
+                            df_day.columns = [str(c).strip() if isinstance(c, str) else c for c in df_day.columns]
                             df_day.rename(columns={df_day.columns[0]: "QTYDay"}, inplace=True)
 
                             if "QTYDay" not in df_day.columns:
@@ -221,10 +221,8 @@ def process_rty_7z(uploaded_file):
                                 })
 
                             # 3. Daily Fail Mode
-                            df_fail_day = pd.read_excel(xls, sheet_name=1, skiprows=7, nrows=793)
-                            df_fail_day.dropna(axis=1, how='all', inplace=True)
+                            df_fail_day = pd.read_excel(xls, sheet_name=1, skiprows=7, nrows=793, usecols=list(range(35)))
                             df_fail_day.rename(columns={df_fail_day.columns[0]: "FailMode"}, inplace=True)
-                            df_fail_day = df_fail_day[df_fail_day["FailMode"].notna()]
 
                             fail_day_formatted = []
                             for c in df_fail_day.columns:
