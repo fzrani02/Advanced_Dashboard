@@ -11,7 +11,7 @@ import io
 import xlsxwriter
 from PIL import Image
 
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def run_processing(uploaded_file):
     return process_rty_7z(uploaded_file)
 
