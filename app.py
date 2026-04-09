@@ -323,26 +323,40 @@ if uploaded_file:
 
             
             st.header("Daily Integrated Data")
-            
-            st.markdown("#### Quantity and Yield per Day")
-            if df_qty_daily is not None and not df_qty_daily.empty:
-                st.dataframe(df_qty_daily, use_container_width=True)
 
+            if df_qty_daily is not None and not df_qty_daily.empty:
+                abaikan_kolom = ["QTYDay", "Customer", "Station", "Project"]
+                kolom_hari = [c for c in df_qty_daily.columns if c not in abaikan_kolom]
+
+                bulan_tersedia = []
+                for hari in kolom_hari:
+                    bagian = hari.split('-')
+                    if len(bagian) >= 2:
+                        nama_bulan = f"{bagian[1]}-{bagian[-1]}"
+                        if nama_bulan not in bulan_tersedia:
+                            bulan_tersedia.append(nama_bulan)
+
+                if bulan_tersedia:
+                    bulan_pilihan = st.selectbox("🗓️ Choose Month for Daily Data:", bulan_tersedia, key="filter_bulan_daily")
+                    
+                    kolom_tampil = [c for c in kolom_hari if c.endswith(bulan_pilihan)]
+                    
+                    st.markdown(f"### Quantity and Yield per Day ({bulan_pilihan})")
+                    kolom_base_qty = [c for c in abaikan_kolom if c in df_qty_daily.columns]
+                    st.dataframe(df_qty_daily[kolom_base_qty + kolom_tampil], use_container_width=True)
+
+                    st.markdown(f"### Top 5 Fail Mode per Day ({bulan_pilihan})")
+                    if df_fail_daily is not None and not df_fail_daily.empty:
+                        kolom_base_fail = [c for c in ["FailMode", "Customer", "Station", "Project"] if c in df_fail_daily.columns]
+                        kolom_tampil_fail =  [c for c in kolom_tampil if c in df_fail_daily.columns]
+                        st.dataframe(df_fail_daily[kolom_base_fail + kolom_tampil_fail], use_container_width = True)
+                    else: 
+                        st.info("No daily fail mode data available.")
+
+                else:
+                    st.info("Format date incorrect for monthly filter.")
             else:
                 st.info("No daily quantity data available.")
-            
-            st.markdown("#### Top 5 Fail Mode per Day")
-            if df_fail_daily is not None and not df_fail_daily.empty:
-                st.dataframe(df_fail_daily, use_container_width=True)
-
-            else:
-                st.info("No daily fail mode data available.")
-            
-            st.markdown("#### Daily Detail")
-            if df_daily_detail is not None and not df_daily_detail.empty:
-                st.dataframe(df_daily_detail, use_container_width=True)
-            else:
-                st.info("No daily detail data available.")
 
             st.markdown("----")
 
