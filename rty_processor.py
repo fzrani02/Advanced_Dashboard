@@ -168,8 +168,16 @@ def process_rty_7z(uploaded_file):
                         try:
                             # 1. Ekstrak QTY & Yield
                             df_day = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4, usecols=list(range(35)))
+
+                            day_cols_formatted = []
+                            for c in df_day.columns:
+                                if c isinstance(c, pd.Timestamp) or hasattr(c, 'strftime'):
+                                    day_cols_formatted.append(f"{c.day}-{c.strftime('%b-%y')}")
+                                else:
+                                    day_cols_formatted.append(str(c).strip() if isinstance(c, str) else str(c))
                             
-                            df_day.columns = [str(c).strip() if isinstance(c, str) else c for c in df_day.columns]
+                            df_day.columns = day_cols_formatted
+                            
                             df_day.rename(columns={df_day.columns[0]: "QTYDay"}, inplace=True)
 
                             if "QTYDay" not in df_day.columns:
@@ -222,6 +230,17 @@ def process_rty_7z(uploaded_file):
 
                             # 3. Daily Fail Mode
                             df_fail_day = pd.read_excel(xls, sheet_name=1, skiprows=7, nrows=793, usecols=list(range(35)))
+
+                            fail_cols_formatted = []
+                            for c in df_fail_day.columns:
+                                if isintance(c, pd.Timestamp) or hasattr(c, 'strftime'):
+                                    fail_cols_formatted.append(f"{c.day}-{c.strftime('%b-%y')}")
+
+                                else:
+                                    fail_cols_formatted.append(str(c).strip() if isinstance(c, str) else str(c))
+                                    
+                            df_fail_day.columns = fail_cols_formatted
+                            
                             df_fail_day.rename(columns={df_fail_day.columns[0]: "FailMode"}, inplace=True)
 
                             fail_day_formatted = []
