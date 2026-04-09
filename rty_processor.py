@@ -7,6 +7,7 @@ from io import BytesIO
 import py7zr
 import stat
 import time
+import gc
 
 def on_rm_error(func, path, exc_info):
     try:
@@ -166,7 +167,7 @@ def process_rty_7z(uploaded_file):
                         # ==============================
                         try:
                             # 1. Ekstrak QTY & Yield
-                            df_day = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4)
+                             = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4)
                             df_day.columns = df_day.columns.str.strip()
                             df_day.rename(columns={df_day.columns[0]: "QTYDay"}, inplace=True)
 
