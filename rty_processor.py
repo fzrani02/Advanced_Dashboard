@@ -167,7 +167,8 @@ def process_rty_7z(uploaded_file):
                         # ==============================
                         try:
                             # 1. Ekstrak QTY & Yield
-                             = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4)
+                            df_day = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4)
+                            df_day.dropna(axis=1, how='all', inplace=True)
                             df_day.columns = df_day.columns.str.strip()
                             df_day.rename(columns={df_day.columns[0]: "QTYDay"}, inplace=True)
 
@@ -221,6 +222,7 @@ def process_rty_7z(uploaded_file):
 
                             # 3. Daily Fail Mode
                             df_fail_day = pd.read_excel(xls, sheet_name=1, skiprows=7, nrows=793)
+                            df_fail_day.dropna(axis=1, how='all', inplace=True)
                             df_fail_day.rename(columns={df_fail_day.columns[0]: "FailMode"}, inplace=True)
                             df_fail_day = df_fail_day[df_fail_day["FailMode"].notna()]
 
@@ -410,7 +412,8 @@ def process_rty_7z(uploaded_file):
 
                     
                     ##########
-
+        gc.collect()
+        
         if not all_data:
             return None, None, None, None, None, None, None, None, None, None
 
