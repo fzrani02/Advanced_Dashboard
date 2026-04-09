@@ -16,8 +16,7 @@ def on_rm_error(func, path, exc_info):
     except Exception:
         pass
 
-
-def process_rty_7z(uploaded_file):
+def process_rty_7z(uploaded_file, target_month_daily):
 
     # ==============================
     # Temp folder
@@ -166,10 +165,27 @@ def process_rty_7z(uploaded_file):
                         # DAILY DATA
                         # ==============================
                         try:
+                            df_header = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=0)
+                            target_cols_idx = [0]
+
+                            for i, col in enumerate(df_header.columns[1:], start=1):
+                                if isinstance(col, pd.Timestamp) or hasattr(col, 'strftime'):
+                                    col_str = col.strftime('%b')
+                                else:
+                                    col_str = str(col)
+
+                                if target_month_daily.lower() in col_str.lower():
+                                    target_cols_idx.append(i)
+
+                            if len(target_cols_idx) == 1:
+                                continue 
+                            
                             # 1. Ekstrak QTY & Yield
-                            df_day = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4, usecols=list(range(35)))
+                            df_day = pd.read_excel(xls, sheet_name=1, skiprows=1, nrows=4, usecols=target_cols_idx)
 
                             day_cols_formatted = []
+
+                            
                             for c in df_day.columns:
                                 if isinstance(c, pd.Timestamp) or hasattr(c, 'strftime'):
                                     day_cols_formatted.append(f"{c.day}-{c.strftime('%b-%y')}")
@@ -233,7 +249,7 @@ def process_rty_7z(uploaded_file):
 
                             fail_cols_formatted = []
                             for c in df_fail_day.columns:
-                                if isintance(c, pd.Timestamp) or hasattr(c, 'strftime'):
+                                if isinstance(c, pd.Timestamp) or hasattr(c, 'strftime'):
                                     fail_cols_formatted.append(f"{c.day}-{c.strftime('%b-%y')}")
 
                                 else:
