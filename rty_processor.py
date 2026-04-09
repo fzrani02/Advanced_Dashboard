@@ -171,7 +171,7 @@ def process_rty_7z(uploaded_file):
 
                             day_cols_formatted = []
                             for c in df_day.columns:
-                                if c isinstance(c, pd.Timestamp) or hasattr(c, 'strftime'):
+                                if isinstance(c, pd.Timestamp) or hasattr(c, 'strftime'):
                                     day_cols_formatted.append(f"{c.day}-{c.strftime('%b-%y')}")
                                 else:
                                     day_cols_formatted.append(str(c).strip() if isinstance(c, str) else str(c))
