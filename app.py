@@ -278,7 +278,7 @@ if uploaded_file:
                 (df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer) = results
 
         except ValueError as ve:
-            st.error(f"Error Unpacking Variable (the return amount is incorrect): {vel}")
+            st.error(f"Error Unpacking Variable (the return amount is incorrect): {ve}")
             st.stop()
 
         except Exception as e:
