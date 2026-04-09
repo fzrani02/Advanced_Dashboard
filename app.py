@@ -275,7 +275,7 @@ if uploaded_file:
                 st.warning("Data not available or incorrect data structure.")
                 st.stop()
             else:
-                (df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer = results
+                (df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer) = results
 
         except ValueError as ve:
             st.error(f"Error Unpacking Variable (the return amount is incorrect): {vel}")
