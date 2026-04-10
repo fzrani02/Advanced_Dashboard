@@ -274,7 +274,7 @@ if uploaded_file:
 
         st.success("Processing Completed")
 
-        tab1, tab2, tab3, tab4 = st.tabs(["Data Overview", "Monthly", "Weekly"])
+        tab1, tab2, tab3 = st.tabs(["Data Overview", "Monthly", "Weekly"])
 
         with tab1:
             st.header("Monthly Integrated Data")
