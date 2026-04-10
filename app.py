@@ -302,15 +302,6 @@ if uploaded_file:
             
             st.markdown("----")
 
-            
-            st.header("Daily Integrated Data")
-            
-            st.markdown("#### Quantity and Yield per Day")
-            st.markdown("#### Top 5 Fail Mode per Day")
-            st.markdown("#### Daily Detail")
-
-            st.markdown("----")
-
             st.download_button(
                 "Download Integrated File",
                 excel_buffer,
