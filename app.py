@@ -11,9 +11,9 @@ import io
 import xlsxwriter
 from PIL import Image
 
-#@st.cache_data(show_spinner=False)
-def run_processing(uploaded_file, target_month_daily):
-    return process_rty_7z(uploaded_file, target_month_daily)
+@st.cache_data(show_spinner=False)
+def run_processing(uploaded_file):
+    return process_rty_7z(uploaded_file)
 
 def generate_excel_report(customer, month, df_st_yield, buf_fail, buf_proj_yield, dict_proj_tables):
     output = io.BytesIO()
@@ -257,11 +257,6 @@ st.set_page_config(layout="wide")
 
 st.sidebar.header("Input Data")
 
-target_month_daily = st.sidebar.selectbox(
-    "Select a month for daily data:", 
-    ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-)
-
 uploaded_file = st.sidebar.file_uploader(
     "Upload .7z file",
     type=["7z"]
@@ -272,31 +267,12 @@ st.sidebar.caption("Example: RTY > ABB > FCT > AB_010.xlsx")
 
 if uploaded_file:
 
-    with st.spinner(f"Processing file (Extracting Daily {target_month_daily})..."):
-        try:
-            results = run_processing(uploaded_file, target_month_daily)
+    with st.spinner("Processing file..."):
+        df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, excel_buffer = run_processing(uploaded_file)
 
-            if results[0] is None:
-                st.warning("Data not available or incorrect data structure.")
-                st.stop()
-            else:
-                (df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer) = results
+    if df_qty is not None:
 
-        except ValueError as ve:
-            st.error(f"Error Unpacking Variable (the return amount is incorrect): {ve}")
-            st.stop()
-
-        except Exception as e:
-            st.error(f"Fatal Error while processing file: {e}")
-            st.stop()
-
-    ############################################
-        
-        #df_qty, df_fail, df_monthly, df_qty_weekly, df_fail_weekly, df_weekly_detail, df_qty_daily, df_fail_daily, df_daily_detail, excel_buffer = run_processing(uploaded_file)
-
-    #if df_qty is not None:
-
-        #st.success("Processing Completed")
+        st.success("Processing Completed")
 
         tab1, tab2, tab3, tab4 = st.tabs(["Data Overview", "Monthly", "Weekly", "Daily"])
 
@@ -328,26 +304,11 @@ if uploaded_file:
 
             
             st.header("Daily Integrated Data")
-            st.caption(f"Specifically display data for: **{target_month_daily}**")
-
-            st.markdown("#### Quantity and Yield per Day")
-            if df_qty_daily is not None and not df_qty_daily.empty:
-                st.dataframe(df_qty_daily, use_container_width=True)
-            else:
-                st.info("No daily quantity data available.")
-
-            st.markdown("#### Top 5 Fail Mode per Day")
-            if df_fail_daily is not None and not df_fail_daily.empty:
-                st.dataframe(df_fail_daily, use_container_width=True)
-            else:
-                st.info("No daily fail mode data available.")
-
-            st.markdown("#### Daily Detail")
-            if df_daily_detail is not None and not df_daily_detail.empty:
-                st.dataframe(df_daily_detail, use_container_width=True)
-            else:
-                st.info("No daily detail data available.")
             
+            st.markdown("#### Quantity and Yield per Day")
+            st.markdown("#### Top 5 Fail Mode per Day")
+            st.markdown("#### Daily Detail")
+
             st.markdown("----")
 
             st.download_button(
