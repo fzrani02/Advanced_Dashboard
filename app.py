@@ -274,7 +274,7 @@ if uploaded_file:
 
         st.success("Processing Completed")
 
-        tab1, tab2, tab3, tab4 = st.tabs(["Data Overview", "Monthly", "Weekly", "Daily"])
+        tab1, tab2, tab3, tab4 = st.tabs(["Data Overview", "Monthly", "Weekly"])
 
         with tab1:
             st.header("Monthly Integrated Data")
@@ -957,10 +957,7 @@ if uploaded_file:
                         st.warning(f"Unable to create report. Error: {e}")
             else:
                 st.warning("No weekly data available.")
-            
-################################################################################################################
-        with tab4:
-            st.subheader("Daily")
+        
             
 
 
