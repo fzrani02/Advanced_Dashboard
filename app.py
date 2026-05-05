@@ -548,7 +548,8 @@ if uploaded_file:
                         st.text_input(
                             "Choosen Customer (Fail Mode)",
                             value= selected_customer_fail,
-                            disabled= False
+                            disabled= True,
+                            help="To change the customer, please use the 'Choose Customer' filter above."
                         )
 
                     df_fail_filtered =  df_fail[
