@@ -161,9 +161,17 @@ def generate_weekly_excel_report(
         # Insert Gambar Bulanan
         worksheet1.insert_image('A3', '', {'image_data': buf_yield_station, 'x_scale': 0.5, 'y_scale':0.5})
         if m_buf_fail:
-            worksheet1.insert_image('J3', '', {'image_data': resize_img(m_buf_fail, 526, 281), 'x_scale': 0.4, 'y_scale': 0.4})
+            # Gunakan fungsi resize Anda, tapi JANGAN pakai x_scale dan y_scale lagi
+            worksheet1.insert_image('J3', '', {'image_data': resize_img(m_buf_fail, 526, 281)})
+            
         if m_buf_proj:
-            worksheet1.insert_image('A16', '', {'image_data': resize_img(m_buf_proj, 596, 284), 'x_scale': 0.4, 'y_scale': 0.4})
+            worksheet1.insert_image('A16', '', {'image_data': resize_img(m_buf_proj, 596, 284)})
+        
+        
+        #if m_buf_fail:
+         #   worksheet1.insert_image('J3', '', {'image_data': resize_img(m_buf_fail, 526, 281), 'x_scale': 0.4, 'y_scale': 0.4})
+        #if m_buf_proj:
+         #   worksheet1.insert_image('A16', '', {'image_data': resize_img(m_buf_proj, 596, 284), 'x_scale': 0.4, 'y_scale': 0.4})
 
         # Tabel Detail Project Bulanan
         row = 28
