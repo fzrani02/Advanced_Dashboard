@@ -533,10 +533,11 @@ if uploaded_file:
                             st.session_state["fail_month"] = st.session_state["main_month"]
 
                         
-                        selected_month_fail = st.selectbox(
-                            "Choose Month (Fail Mode)",
+                        selected_month_fail = st.text_input(
+                            "Choosen Month (Fail Mode)",
                             month_order,
-                            key="fail_month"
+                            key="fail_month",
+                            disabled= False
                         )
                        
                        # fail mode = first pick
