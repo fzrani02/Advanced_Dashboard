@@ -294,7 +294,7 @@ def render_weekly_tab(df_qty_weekly, df_weekly_detail, df_fail_weekly):
                 plt.close(fig2)
 
             else:
-                st.info("No fail found (all counts are 0) for teh selected range.")
+                st.info("No fail found (all counts are 0) for the selected range.")
 
         ########################################################
 
