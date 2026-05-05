@@ -535,9 +535,10 @@ if uploaded_file:
                         
                         selected_month_fail = st.text_input(
                             "Choosen Month (Fail Mode)",
-                            month_order,
+                            #month_order,
+                            value = month,
                             key="fail_month",
-                            disabled= False
+                            disabled= True
                         )
                        
                        # fail mode = first pick
