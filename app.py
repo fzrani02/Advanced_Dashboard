@@ -688,10 +688,11 @@ if uploaded_file:
                         selected_customer_defect = customers[0]
                         
                         st.text_input(
-                            "Customer (Defect Details)",
+                            "Choosen Customer (Defect Details)",
                             value= selected_customer_defect,
                             key="defect_customer_display",
-                            disabled= False
+                            disabled= True,
+                            help="This is automatically set to your first selected customer. To change it, please use the 'Choose Customer' filter above."
                         )
                         
                     # ==============================================
