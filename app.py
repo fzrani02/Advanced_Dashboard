@@ -669,7 +669,7 @@ if uploaded_file:
                         else:
                             default_month_index = 0
 
-                        selected_month_defect = st.text_input(
+                        selected_month_defect = st.selectbox(
                             "Choosen Month (Defect Details)",
                             month_order, 
                             index = default_month_index,
