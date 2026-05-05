@@ -669,12 +669,13 @@ if uploaded_file:
                         else:
                             default_month_index = 0
 
-                        selected_month_defect = st.selectbox(
+                        selected_month_defect = st.text_input(
                             "Choosen Month (Defect Details)",
-                            month_order, 
-                            index = default_month_index,
+                            #month_order, 
+                            #index = default_month_index,
+                            value = month,
                             key="defect_month",
-                            disabled = False
+                            disabled = True
                         )
                             
                         if "main_customer" in st.session_state and st.session_state["main_customer"]:
