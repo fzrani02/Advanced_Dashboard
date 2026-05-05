@@ -912,7 +912,7 @@ if uploaded_file:
                         )
 
                         st.download_button(
-                            label = "📥 Download Project Detail Report",
+                            label = "📥 Download Monthly Project Report",
                             data = excel_data,
                             file_name= f"Project_Detail_Report_{customers[0]}_{month}.xlsx",
                             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
