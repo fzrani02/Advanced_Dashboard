@@ -538,7 +538,8 @@ if uploaded_file:
                             #month_order,
                             value = month,
                             key="fail_month",
-                            disabled= True
+                            disabled= True,
+                            help="To change the month, please use the 'Choose Month' filter above."
                         )
                        
                        # fail mode = first pick
@@ -676,7 +677,8 @@ if uploaded_file:
                             #index = default_month_index,
                             value = month,
                             key="defect_month",
-                            disabled = True
+                            disabled = True,
+                            help="To change the month, please use the 'Choose Month' filter above."
                         )
                             
                         if "main_customer" in st.session_state and st.session_state["main_customer"]:
