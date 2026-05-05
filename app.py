@@ -549,7 +549,7 @@ if uploaded_file:
                             "Choosen Customer (Fail Mode)",
                             value= selected_customer_fail,
                             disabled= True,
-                            help="To change the customer, please use the 'Choose Customer' filter above."
+                            help="This is automatically set to your first selected customer. To change it, please use the 'Choose Customer' filter above."
                         )
 
                     df_fail_filtered =  df_fail[
