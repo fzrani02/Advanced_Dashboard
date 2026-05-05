@@ -544,7 +544,7 @@ if uploaded_file:
 
                         selected_customer_fail = customers[0]
                         st.text_input(
-                            "Customer (Fail Mode)",
+                            "Choosen Customer (Fail Mode)",
                             value= selected_customer_fail,
                             disabled= False
                         )
